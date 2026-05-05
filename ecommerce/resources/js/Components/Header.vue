@@ -5,11 +5,16 @@ import { ShoppingCartIcon, UserIcon, MagnifyingGlassIcon, Bars3Icon } from '@her
 
 const searchQuery = ref('');
 const isMobileMenuOpen = ref(false);
+const isProfileOpen = ref(false);
 
 const handleSearch = () => {
     if (searchQuery.value) {
         router.get('/products', { search: searchQuery.value });
     }
+};
+
+const handleLogout = () => {
+    router.post('/logout');
 };
 </script>
 
@@ -52,9 +57,36 @@ const handleSearch = () => {
                         <span class="absolute -top-1 -right-1 bg-black text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">0</span>
                     </Link>
 
-                    <Link href="/profile" class="text-gray-600 hover:text-black transition">
-                        <UserIcon class="h-6 w-6" />
-                    </Link>
+                    <div class="relative">
+                        <button
+                            @click.stop="isProfileOpen = !isProfileOpen"
+                            class="text-gray-600 hover:text-black transition focus:outline-none"
+                            aria-expanded="false"
+                            aria-label="Open profile menu"
+                        >
+                            <UserIcon class="h-6 w-6" />
+                        </button>
+
+                        <div
+                            v-if="isProfileOpen"
+                            class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-xl shadow-lg ring-1 ring-black ring-opacity-5"
+                        >
+                            <Link
+                                href="/profile"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                @click="isProfileOpen = false"
+                            >
+                                Profile
+                            </Link>
+                            <button
+                                type="button"
+                                @click="handleLogout"
+                                class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                                Logout
+                            </button>
+                        </div>
+                    </div>
 
                     <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="md:hidden">
                         <Bars3Icon class="h-6 w-6 text-gray-600" />
