@@ -144,21 +144,37 @@ const props = defineProps({
 });
 
 const currentSlide = ref(0);
-const slideshowImages = [
-  'https://picsum.photos/seed/1/800/600',
-  'https://picsum.photos/seed/2/800/600',
-  'https://picsum.photos/seed/3/800/600',
-  'https://picsum.photos/seed/4/800/600',
-  'https://picsum.photos/seed/5/800/600',
-  'https://picsum.photos/seed/6/800/600',
-];
+const slideshowImages = ref([]); // Magsisimula bilang blanko
 
 let timer = null;
 
-onMounted(() => {
-  timer = setInterval(() => {
-    currentSlide.value = (currentSlide.value + 1) % slideshowImages.length;
-  }, 4000);
+onMounted(async () => {
+  // Kunin ang mga tunay na MotoGP image gamit ang isang dummy API o custom service
+  // Dito, gagamitin natin ang Picsum na may MotoGP seed para sa demonstration.
+  // Sa totoong scenario, ito ay maaaring manggaling sa iyong backend o isang sports image API.
+  try {
+    const response = await fetch('https://picsum.photos/v2/list?page=1&limit=6');
+    if (!response.ok) {
+        throw new Error('Failed to fetch images');
+    }
+    const data = await response.json();
+    slideshowImages.value = data.map(item => `https://picsum.photos/id/${item.id}/800/600?grayscale&blur=2`); // Dummy seed, grayscale at blur para mabilis magload
+
+    // Magsimula ng timer matapos makuha ang mga images
+    if (slideshowImages.value.length > 0) {
+        timer = setInterval(() => {
+          currentSlide.value = (currentSlide.value + 1) % slideshowImages.value.length;
+        }, 4000);
+    }
+  } catch (error) {
+    console.error('Error fetching images:', error);
+    // Magtakda ng fallback images o pangasiwaan ang error
+    slideshowImages.value = [
+      'https://picsum.photos/seed/moto1/800/600',
+      'https://picsum.photos/seed/moto2/800/600',
+      'https://picsum.photos/seed/moto3/800/600'
+    ]
+  }
 });
 
 onUnmounted(() => {

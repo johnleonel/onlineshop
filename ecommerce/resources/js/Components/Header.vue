@@ -2,15 +2,32 @@
 import { ref } from 'vue';
 import { Link, router } from '@inertiajs/vue3';
 import { ShoppingCartIcon, UserIcon, MagnifyingGlassIcon, Bars3Icon } from '@heroicons/vue/24/outline';
+import useCart from '@/composables/useCart';
 
 const searchQuery = ref('');
 const isMobileMenuOpen = ref(false);
 const isProfileOpen = ref(false);
+const isProductsDropdownOpen = ref(false);
+let productsDropdownCloseTimeout = null;
+
+const { cartCount } = useCart();
 
 const handleSearch = () => {
     if (searchQuery.value) {
         router.get('/products', { search: searchQuery.value });
     }
+};
+
+const openProductsDropdown = () => {
+    clearTimeout(productsDropdownCloseTimeout);
+    isProductsDropdownOpen.value = true;
+};
+
+const closeProductsDropdown = () => {
+    clearTimeout(productsDropdownCloseTimeout);
+    productsDropdownCloseTimeout = window.setTimeout(() => {
+        isProductsDropdownOpen.value = false;
+    }, 120);
 };
 
 const handleLogout = () => {
@@ -27,7 +44,21 @@ const handleLogout = () => {
                 <div class="hidden md:flex space-x-6 text-sm font-medium text-gray-600">
                     <Link href="/" class="hover:text-black transition font-semibold">Home</Link>
                     <Link href="/shop" class="hover:text-black transition">Shop</Link>
-                    <Link href="/products" class="hover:text-black transition">Products</Link>
+                    <div class="relative" @mouseenter="openProductsDropdown" @mouseleave="closeProductsDropdown">
+                        <Link :href="route('products.index')" class="hover:text-black transition inline-flex items-center gap-1">
+                            Products
+                            <svg class="h-4 w-4 text-gray-500 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </Link>
+                        <div :class="['absolute left-0 z-20 mt-2 w-56 rounded-2xl border border-slate-200 bg-white p-3 shadow-lg', isProductsDropdownOpen ? 'block' : 'hidden']" @mouseenter="openProductsDropdown" @mouseleave="closeProductsDropdown">
+                            <Link :href="route('products.index')" class="block rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-slate-100">All Products</Link>
+                            <Link :href="route('products.index', { category: 'tshirt' })" class="block rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-slate-100">Tshirt</Link>
+                            <Link :href="route('products.index', { category: 'jackets' })" class="block rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-slate-100">Jackets</Link>
+                            <Link :href="route('products.index', { category: 'shorts' })" class="block rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-slate-100">Shorts</Link>
+                            <Link :href="route('products.index', { category: 'sando' })" class="block rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-slate-100">Sando</Link>
+                        </div>
+                    </div>
                     <Link href="/deals" class="text-red-500 hover:text-red-600 font-bold italic">Deals</Link>
                     <Link href="/about" class="hover:text-black transition">About Us</Link>
                 </div>
@@ -54,7 +85,7 @@ const handleLogout = () => {
 
                     <Link href="/cart" class="relative text-gray-600 hover:text-black transition">
                         <ShoppingCartIcon class="h-6 w-6" />
-                        <span class="absolute -top-1 -right-1 bg-black text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">0</span>
+                        <span class="absolute -top-1 -right-1 bg-black text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{{ cartCount }}</span>
                     </Link>
 
                     <div class="relative">
