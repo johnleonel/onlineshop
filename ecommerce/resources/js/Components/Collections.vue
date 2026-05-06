@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import { Link, router } from '@inertiajs/vue3'; // Gamitin ang Inertia router, hindi vue-router
 
 const props = defineProps({
   collections: {
@@ -64,17 +65,20 @@ const selectCollection = (index) => {
 const formatPrice = (price) => {
   return price.toFixed(2);
 };
+
+// Inertia navigation
+const goToProducts = () => {
+  router.visit('/products');
+};
 </script>
 
 <template>
   <div class="w-full bg-white py-12 px-4 md:px-8">
-    <!-- Section Title -->
     <div class="max-w-7xl mx-auto mb-8">
       <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-900 tracking-tight mb-10">
         COLLECTIONS
       </h2>
 
-      <!-- Collection Tabs -->
       <div class="flex flex-wrap gap-3 md:gap-6 justify-center mb-12 border-b border-gray-200 pb-6">
         <button
           v-for="(collection, index) in collections"
@@ -92,7 +96,6 @@ const formatPrice = (price) => {
       </div>
     </div>
 
-    <!-- Products Grid -->
     <div class="max-w-7xl mx-auto">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <div
@@ -100,15 +103,12 @@ const formatPrice = (price) => {
           :key="item.id"
           class="group cursor-pointer"
         >
-          <!-- Product Image Container -->
           <div class="relative overflow-hidden rounded-lg bg-gray-100 mb-4 aspect-square">
             <img
               :src="item.image"
               :alt="item.name"
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
-            
-            <!-- Discount Badge -->
             <div
               v-if="item.discount"
               class="absolute top-3 right-3 bg-red-500 text-white rounded-full px-3 py-1 text-xs font-bold"
@@ -117,7 +117,6 @@ const formatPrice = (price) => {
             </div>
           </div>
 
-          <!-- Product Info -->
           <div class="text-center">
             <h3 class="text-sm md:text-base font-semibold text-gray-900 mb-2 line-clamp-2">
               {{ item.name }}
@@ -128,9 +127,30 @@ const formatPrice = (price) => {
           </div>
         </div>
       </div>
+
+      <!-- Button with Shimmer Hover Animation -->
+      <div class="mt-16 flex justify-center">
+        <button 
+          @click="goToProducts"
+          class="group relative overflow-hidden px-10 py-4 bg-black text-white font-bold tracking-widest transition-all duration-300 ease-in-out hover:bg-gray-900 hover:shadow-2xl hover:-translate-y-1 active:scale-95 rounded-sm uppercase text-sm"
+        >
+          <span class="relative z-10">View All Collection</span>
+          <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Custom animation trigger for Tailwind group-hover */
+.group:hover .group-hover\:animate-\[shimmer_1\.5s_infinite\] {
+  animation: shimmer 1.5s infinite;
+}
 </style>

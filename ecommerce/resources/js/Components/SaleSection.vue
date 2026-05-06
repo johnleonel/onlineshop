@@ -10,7 +10,7 @@ const saleItems = [
   { id: 8, name: 'VOODOO QUEEN TEE', price: 750.00, image: '/images/hood8.jpg' },
   { id: 9, name: 'HEART MOLD TEE', price: 750.00, image: '/images/hood9.jpg' },
   { id: 10, name: 'REDEMPTION TEE', price: 750.00, image: '/images/hood10.jpg' },
-  { id: 11, name: 'MUTED TEE', price: 750.00, image: '/images/hood11.jpg'},
+  { id: 11, name: 'MUTED TEE', price: 750.00, image: '/images/hood11.jpg' },
   { id: 12, name: 'SLOPE PANTS', price: 1000.00, image: '/images/hood12.jpg' },
 ];
 

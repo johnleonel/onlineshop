@@ -14,10 +14,7 @@
               v-show="currentSlide === index"
               class="absolute inset-0"
             >
-              
               <img :src="img" class="w-full h-full object-cover opacity-100 transition-opacity duration-1000" alt="slideshow-img">
-              
-              <!-- Gradient Overlay - pinanatili para mabasa pa rin yung text sa gitna -->
               <div class="absolute inset-0 bg-gradient-to-r from-white via-white/20 to-transparent"></div>
             </div>
           </transition-group>
@@ -28,21 +25,17 @@
           <div class="flex items-center mb-2">
             <span class="text-7xl font-bold text-gray-900 tracking-tighter mr-6 leading-none">01</span>
             <div class="flex flex-col justify-center">
-              <h2 class="text-2xl font-serif font-semibold text-gray-800 leading-none mb-1">Just a kid from</h2>
+              <h2 class="text-2xl font-serif font-semibold text-gray-800 leading-none mb-1">STRGHTOTJLLY</h2>
               <div class="h-px bg-gray-200 w-full mt-1"></div>
             </div>
           </div>
 
-          <!-- Floating Quote (Right) -->
           <div class="absolute top-0 right-0 bg-white/70 backdrop-blur-md rounded-2xl py-3 px-2 shadow-xl border border-gray-100">
             <p class="text-sm italic font-medium text-gray-700 tracking-tight">
               "In dressing well, self-confidence is quickly achieved."
             </p>
           </div>
 
-          
-
-         <!-- Main Titles Container -->
           <div class="flex flex-col justify-center min-h-[400px] mt-4">
             <div class="text-left">
               <h1 class="text-8xl font-serif font-bold text-gray-900 tracking-tighter leading-[0.8]">
@@ -55,7 +48,6 @@
           </div>
         </div>
 
-        <!-- Footer Part: Socials & Buttons -->
         <div class="relative z-10 flex flex-col md:flex-row items-end md:items-center justify-between gap-6">
           <div class="flex items-center space-x-3">
             <span class="text-gray-500 font-medium text-sm">follow us on:</span>
@@ -92,55 +84,59 @@
           </div>
         </div>
 
-         <!-- new drop -->
-<div class="relative overflow-hidden bg-white shadow-lg rounded-3xl group">
-  
-        <!-- Grid Container -->
-        <div class="grid grid-cols-2 gap-2 p-2 transition-all duration-500 opacity-70">
-          <img 
-            v-for="(image, index) in newDropImages" 
-            :key="index" 
-            :src="image" 
-            alt="Hoodie" 
-            class="w-full aspect-[4/5] object-cover rounded-xl shadow-sm"
-          >
+        <!-- NEW DROP AUTOMATIC CAROUSEL -->
+        <div class="relative overflow-hidden bg-white shadow-lg rounded-3xl group cursor-pointer h-72 flex items-center">
+          
+          <!-- Carousel Wrapper -->
+          <div class="flex w-full overflow-hidden">
+            <!-- Scrolling Content -->
+            <div class="flex gap-3 animate-scroll group-hover:[animation-play-state:paused]">
+              <!-- Dinoble ang listahan para sa seamless infinite loop -->
+              <div 
+                v-for="(image, index) in [...newDropImages, ...newDropImages]" 
+                :key="index" 
+                class="flex-none w-36 h-52 relative overflow-hidden rounded-2xl shadow-sm transition-transform duration-500 hover:scale-110 hover:z-20"
+              >
+                <img 
+                  :src="image" 
+                  alt="Hoodie" 
+                  class="w-full h-full object-cover transition-all duration-500 grayscale group-hover:grayscale-0"
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Overlay Text Container -->
+          <div class="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/20 transition-colors duration-500 rounded-3xl pointer-events-none z-10">
+            <p class="px-4 text-xl font-black text-center text-white uppercase tracking-tighter md:text-2xl transform transition-transform duration-500 group-hover:scale-110 group-hover:tracking-widest">
+              new drop limited only!
+            </p>
+          </div>
         </div>
 
-        <!-- Overlay Text Container -->
-        <div class="absolute inset-0 flex items-center justify-center bg-black/40 rounded-3xl">
-          <p class="px-4 text-xl font-black text-center text-white uppercase tracking-tighter md:text-2xl">
-            new drop limited only!
-          </p>
-        </div>
-      </div>
+        <!-- Camou Jorts Section -->
+        <div class="bg-[#e2e2e2] rounded-3xl shadow-lg p-5 h-52 flex gap-4 items-center">
+          <div class="flex flex-col justify-center h-full py-1 min-w-fit">
+            <div class="flex flex-col">
+              <h3 class="text-[#000000] font-serif font-bold text-sm uppercase whitespace-nowrap tracking-tight">
+                More Products
+              </h3>
+              <p class="text-gray-700 text-[10px] italic">70+ items.</p>
+            </div>
+            <div class="flex items-center gap-2 mt-2">
+              <button class="w-8 h-8 bg-gray-300/50 rounded-full flex items-center justify-center hover:bg-gray-300 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17l10-10M7 7h10v10"/></svg>
+              </button>
+            </div>
+          </div>
 
-  <!-- Camou Jorts Section -->
-<div class="bg-[#e2e2e2] rounded-3xl shadow-lg p-5 h-52 flex gap-4 items-center">
-  
-  <!-- Left Side: Text and Buttons -->
-      <div class="flex flex-col justify-center h-full py-1 min-w-fit">
-        <div class="flex flex-col">
-          <h3 class="text-[#000000] font-serif font-bold text-sm uppercase whitespace-nowrap tracking-tight">
-            More Products
-          </h3>
-          <p class="text-gray-700 text-[10px] italic">70+ items.</p>
+          <div class="w-[70%] h-full grid grid-cols-2 grid-rows-2 gap-1.5 rounded-2xl overflow-hidden">
+            <img src="/images/more1.jpg" class="w-full h-full object-cover" alt="jorts-1">
+            <img src="/images/more2.jpg" class="w-full h-full object-cover" alt="jorts-2">
+            <img src="/images/more3.jpg" class="w-full h-full object-cover" alt="jorts-3">
+            <img src="/images/more4.jpg" class="w-full h-full object-cover" alt="jorts-4">
+          </div>
         </div>
-        
-        <div class="flex items-center gap-2 mt-2">
-          <button class="w-8 h-8 bg-gray-300/50 rounded-full flex items-center justify-center hover:bg-gray-300 transition">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17l10-10M7 7h10v10"/></svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- Right Side: 4 Picture -->
-      <div class="w-[70%] h-full grid grid-cols-2 grid-rows-2 gap-1.5 rounded-2xl overflow-hidden">
-        <img src="/images/more1.jpg" class="w-full h-full object-cover" alt="jorts-1">
-        <img src="/images/more2.jpg" class="w-full h-full object-cover" alt="jorts-2">
-        <img src="/images/more3.jpg" class="w-full h-full object-cover" alt="jorts-3">
-        <img src="/images/more4.jpg" class="w-full h-full object-cover" alt="jorts-4">
-      </div>
-    </div>
       </div>
     </div>
   </div>
@@ -153,13 +149,21 @@ import { ref, onMounted, onUnmounted } from 'vue';
 const props = defineProps({
   products: { type: Array, default: () => [] },
   stats: { type: Object, default: () => ({ reviews: '4.8' }) },
-  newDropImages: { type: Array, default: () => [] },
+ 
   popularQuoteImage: { type: String, default: '' },
   featuredItemImages: { type: Array, default: () => [] }
 });
 
+const newDropImages = [
+    '/images/hood1.jpg', 
+    '/images/hood2.jpg', 
+    '/images/hood3.jpg', 
+    '/images/hood4.jpg', 
+    '/images/hood2.jpg'
+  ];
+
 const currentSlide = ref(0);
-const slideshowImages = ref([]); // Magsisimula bilang blanko
+const slideshowImages = ref([]);
 
 let timer = null;
 
@@ -184,6 +188,23 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+/* Keyframes para sa kaliwang pag-andar */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    /* Hinihila pabalik sa kalahati ng kabuuang width ng dinobleng listahan */
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  display: flex;
+  width: max-content;
+  animation: scroll 20s linear infinite;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 1.5s ease-in-out;
