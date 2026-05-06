@@ -12,36 +12,36 @@ class ProductController extends Controller
         return [
             [
                 'id' => 1,
-                'name' => 'Xiaomi Monitor 27 Inch',
+                'name' => 'Classic brown polo',
                 'price' => 100.00,
-                'category' => 'Monitor',
+                'category' => 'Polo',
                 'status' => 'active',
-                'statusLabel' => 'Active',
+                'statusLabel' => 'outofstock',
                 'rating' => '4.6',
                 'description' => 'Sharp 27-inch gaming monitor with high refresh rate.',
-                'image' => 'https://via.placeholder.com/800x600?text=Xiaomi+Monitor+27+Inch'
+                'image' => '/images/hood1.jpg'
             ],
             [
                 'id' => 2,
                 'name' => 'Xiaomi 14T',
                 'price' => 450.00,
-                'category' => 'Smartphone',
+                'category' => 'Polo',
                 'status' => 'active',
                 'statusLabel' => 'Active',
                 'rating' => '4.6',
                 'description' => 'Premium smartphone with a powerful camera system.',
-                'image' => 'https://via.placeholder.com/800x600?text=Xiaomi+14T'
+                'image' => '/images/hood2.jpg'
             ],
             [
                 'id' => 3,
                 'name' => 'Bomber Jacket',
                 'price' => 120.00,
-                'category' => 'Jackets',
+                'category' => 'Polo',
                 'status' => 'active',
                 'statusLabel' => 'Active',
                 'rating' => '4.6',
                 'description' => 'Stylish jacket with a comfortable fit and premium finish.',
-                'image' => 'https://via.placeholder.com/800x600?text=Bomber+Jacket'
+                'image' => '/images/hood3.jpg'
             ],
             [
                 'id' => 4,
@@ -52,7 +52,7 @@ class ProductController extends Controller
                 'statusLabel' => 'Active',
                 'rating' => '4.6',
                 'description' => 'Soft cotton tshirt available in multiple colors.',
-                'image' => 'https://via.placeholder.com/800x600?text=Classic+Cotton+Tshirt'
+                'image' => '/images/hood4.jpg'
             ],
             [
                 'id' => 5,
@@ -63,7 +63,7 @@ class ProductController extends Controller
                 'statusLabel' => 'Active',
                 'rating' => '4.6',
                 'description' => 'Lightweight shorts built for comfort and movement.',
-                'image' => 'https://via.placeholder.com/800x600?text=Street+Shorts'
+                'image' => '/images/hood5.jpg'
             ],
             [
                 'id' => 6,
@@ -74,7 +74,7 @@ class ProductController extends Controller
                 'statusLabel' => 'Active',
                 'rating' => '4.6',
                 'description' => 'Breathable sando for warm weather wear.',
-                'image' => 'https://via.placeholder.com/800x600?text=Comfort+Sando'
+                'image' => '/images/hood6.jpg'
             ],
             [
                 'id' => 7,
@@ -85,7 +85,7 @@ class ProductController extends Controller
                 'statusLabel' => 'Active',
                 'rating' => '4.6',
                 'description' => 'Stylish phone with a vivid display and long battery life.',
-                'image' => 'https://via.placeholder.com/800x600?text=Samsung+Galaxy+A35'
+                'image' => '/images/hood7.jpg'
             ],
             [
                 'id' => 8,
@@ -96,10 +96,98 @@ class ProductController extends Controller
                 'statusLabel' => 'Active',
                 'rating' => '4.6',
                 'description' => 'Reliable 24-inch display for office and entertainment.',
-                'image' => 'https://via.placeholder.com/800x600?text=Philips+Monitor+24+Inch'
-            ]
-        ];
-    }
+                'image' => '/images/hood8.jpg'
+            ],
+            [
+            'id' => 9,
+            'name' => 'Techwear Windbreaker',
+            'price' => 1500.00,
+            'category' => 'Jackets',
+            'status' => 'active',
+            'statusLabel' => 'New Arrival',
+            'rating' => '4.8',
+            'description' => 'Water-resistant windbreaker perfect for the rainy season.',
+            'image' => '/images/more1.jpg'
+            ],
+            [
+                'id' => 10,
+                'name' => 'Urban Cargo Pants',
+                'price' => 1200.00,
+                'category' => 'Pants',
+                'status' => 'active',
+                'statusLabel' => 'Active',
+                'rating' => '4.7',
+                'description' => 'Multi-pocket cargo pants for your daily street style.',
+                'image' => '/images/more2.jpg'
+            ],
+            [
+                'id' => 11,
+                'name' => 'Chillerox Beanie',
+                'price' => 350.00,
+                'category' => 'Accessories',
+                'status' => 'active',
+                'statusLabel' => 'Active',
+                'rating' => '4.9',
+                'description' => 'Knitted beanie with embroidered logo.',
+                'image' => '/images/more3.jpg'
+            ],
+            [
+                'id' => 12,
+                'name' => 'Denim Trucker Jacket',
+                'price' => 1800.00,
+                'category' => 'Jackets',
+                'status' => 'active',
+                'statusLabel' => 'Limited',
+                'rating' => '4.6',
+                'description' => 'Classic washed denim jacket with a modern fit.',
+                'image' => '/images/more4.jpg'
+            ],
+            [
+                'id' => 13,
+                'name' => 'Canvas Tote Bag',
+                'price' => 450.00,
+                'category' => 'Accessories',
+                'status' => 'active',
+                'statusLabel' => 'Active',
+                'rating' => '4.5',
+                'description' => 'Heavy-duty canvas bag for your essentials.',
+                'image' => '/images/more1.jpg'
+            ],
+            [
+                'id' => 14,
+                'name' => 'Slim Fit Joggers',
+                'price' => 950.00,
+                'category' => 'Pants',
+                'status' => 'active',
+                'statusLabel' => 'Active',
+                'rating' => '4.7',
+                'description' => 'Breathable fabric joggers for gym or casual wear.',
+                'image' => '/images/more2.jpg'
+            ],
+            [
+                'id' => 15,
+                'name' => 'Premium Leather Belt',
+                'price' => 600.00,
+                'category' => 'Accessories',
+                'status' => 'active',
+                'statusLabel' => 'Active',
+                'rating' => '4.8',
+                'description' => 'Genuine leather belt with matte black buckle.',
+                'image' => '/images/more3.jpg'
+            ],
+            [
+                'id' => 16,
+                'name' => 'Oversized Flannel Shirt',
+                'price' => 850.00,
+                'category' => 'Jackets',
+                'status' => 'active',
+                'statusLabel' => 'Active',
+                'rating' => '4.6',
+                'description' => 'Soft flannel shirt, perfect as an outer layer.',
+                'image' => '/images/more4.jpg'
+            ],
+            ];
+        }
 
     public function index(Request $request)
     {

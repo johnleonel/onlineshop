@@ -2,19 +2,10 @@
   <AppLayout>
     <Head title="Products" />
 
-    <div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="max-w-7xl mx-auto px-3 pt-0 pb-8">
       <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <p class="text-sm uppercase tracking-[0.28em] text-slate-500">Management Product</p>
-          <h1 class="mt-2 text-3xl font-semibold text-slate-900">Add Product to your store</h1>
-          <p class="mt-2 text-sm text-slate-500">Showing {{ selectedCategory === 'all' ? 'All Products' : selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1) }}</p>
         </div>
-        <button
-          type="button"
-          class="inline-flex items-center justify-center rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700"
-        >
-          Add Product
-        </button>
       </div>
 
       <div class="mt-8 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
@@ -23,23 +14,60 @@
             <button
               type="button"
               :class="selectedTab === 'all' ? activeTabClass : tabClass"
-              @click="selectedTab = 'all'"
+              @click="router.get(route('products.index'))"
             >
               All
             </button>
             <button
               type="button"
-              :class="selectedTab === 'active' ? activeTabClass : tabClass"
-              @click="selectedTab = 'active'"
+              :class="selectedTab === 'polo' ? activeTabClass : tabClass"
+              @click="router.get(route('products.index', { category: 'polo' }))"
             >
-              Active
+              Polo
             </button>
             <button
               type="button"
-              :class="selectedTab === 'non-active' ? activeTabClass : tabClass"
-              @click="selectedTab = 'non-active'"
+              :class="selectedTab === 'tshirt' ? activeTabClass : tabClass"
+              @click="router.get(route('products.index', { category: 'tshirt' }))"
             >
-              Non Active
+              T-shirt
+            </button>
+            <button
+              type="button"
+              :class="selectedTab === 'hoodie' ? activeTabClass : tabClass"
+              @click="router.get(route('products.index', { category: 'hoodie' }))"
+            >
+              Hoodie
+            </button>
+            <button
+              type="button"
+              :class="selectedTab === 'shorts' ? activeTabClass : tabClass"
+              @click="router.get(route('products.index', { category: 'shorts' }))"
+            >
+              Shorts
+            </button>
+            <button
+              type="button"
+              :class="selectedTab === 'jackets' ? activeTabClass : tabClass"
+              @click="router.get(route('products.index', { category: 'jackets' }))"
+            >
+              Jackets
+            </button>
+
+            <button
+              type="button"
+              :class="selectedTab === 'pants' ? activeTabClass : tabClass"
+              @click="router.get(route('products.index', { category: 'pants' }))"
+            >
+              Pants
+            </button>
+
+            <button
+              type="button"
+              :class="selectedTab === 'accessories' ? activeTabClass : tabClass"
+              @click="router.get(route('products.index', { category: 'accessories' }))"
+            >
+              Accessories
             </button>
           </div>
 
@@ -58,46 +86,69 @@
           </div>
         </div>
 
-        <div class="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <div
-            v-for="product in filteredProducts"
-            :key="product.id"
-            class="overflow-hidden rounded-[1.5rem] border border-slate-200 bg-slate-50 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md cursor-pointer"
-            @click="goToProduct(product.id)"
-          >
-            <div class="overflow-hidden bg-slate-900">
-              <img
-                :src="product.image"
-                :alt="product.name"
-                class="h-36 w-full object-cover transition duration-300 hover:scale-105"
-              />
-            </div>
-            <div class="p-4">
-              <div class="flex items-center justify-between gap-2 text-xs text-slate-500">
-                <span>{{ product.category }}</span>
-                <span class="rounded-full bg-white px-2 py-1 text-slate-700">{{ product.statusLabel }}</span>
+
+          <!-- Grid Section -->
+          <div class="mt-6 grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            <div
+              v-for="product in filteredProducts"
+              :key="product.id"
+              class="flex flex-col overflow-hidden rounded-[1.5rem] border border-slate-200 bg-slate-50 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md cursor-pointer"
+              @click="goToProduct(product.id)"
+            >
+              <!-- Image Container: Naka-Contain na para buo ang shirt -->
+              <div class="aspect-square w-full overflow-hidden bg-white p-3"> 
+                <img
+                  :src="product.image"
+                  :alt="product.name"
+                  class="h-full w-full object-contain transition duration-500 hover:scale-105"
+                />
               </div>
-              <h2 class="mt-3 text-lg font-semibold text-slate-900">{{ product.name }}</h2>
-              <p class="mt-2 text-sm leading-5 text-slate-600 line-clamp-2">{{ product.description }}</p>
-              <div class="mt-3 flex items-center justify-between gap-3 text-xs">
-                <div>
-                  <p class="text-base font-semibold text-slate-900">${{ formatPrice(product.price) }}</p>
-                  <p class="text-[11px] text-slate-500">{{ product.rating }} ★</p>
+
+              <!-- Content Section: Binawasan ang padding mula p-4 gawing p-3 -->
+              <div class="p-3 flex flex-col flex-grow">
+                <div class="flex items-center justify-between gap-2 text-[10px] uppercase tracking-wider text-slate-500 font-bold">
+                  <span>{{ product.category }}</span>
+                  <span class="rounded-full bg-white px-2 py-0.5 text-green-600 border border-slate-100">{{ product.statusLabel }}</span>
                 </div>
-                <button
-                  type="button"
-                  class="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-slate-900 text-white transition hover:bg-slate-700"
-                  aria-label="Add product"
-                  @click.stop="handleAddToCart(product)"
-                >
-                  <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                  </svg>
-                </button>
+
+                <!-- Name: Ginawang text-sm at line-clamp para hindi humaba -->
+                <h2 class="mt-2 text-sm font-bold text-slate-900 line-clamp-1">{{ product.name }}</h2>
+                
+                <!-- Description: Binawasan ang size para mag-fit -->
+                <p class="mt-1 text-[11px] leading-4 text-slate-500 line-clamp-2">{{ product.description }}</p>
+                
+                <!-- Price & Actions -->
+                <div class="mt-auto pt-3 flex items-center justify-between gap-2">
+                  <div>
+                    <p class="text-sm font-black text-slate-900">₱{{ formatPrice(product.price) }}</p>
+                    <p class="text-[10px] text-yellow-500 font-bold">{{ product.rating }} ★</p>
+                  </div>
+                  
+                  <div class="flex gap-1">
+                    <!-- Compact Buy Button -->
+                    <button
+                      type="button"
+                      class="inline-flex items-center justify-center rounded-xl bg-slate-900 px-3 py-1.5 text-[11px] font-bold text-white transition hover:bg-slate-700"
+                      @click.stop="handleBuy(product)"
+                    >
+                      Buy
+                    </button>
+                    
+                    <!-- Compact Plus Button -->
+                    <button
+                      type="button"
+                      class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-slate-900 text-white transition hover:bg-slate-700"
+                      @click.stop="handleAddToCart(product)"
+                    >
+                      <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
         <div v-if="filteredProducts.length === 0" class="mt-8 rounded-3xl border border-dashed border-slate-200 bg-slate-50 p-8 text-center text-slate-500">
           No products found.
@@ -124,16 +175,23 @@ const props = defineProps({
   }
 })
 
-const selectedTab = ref('all')
+const selectedTab = ref(props.selectedCategory || 'all')
 const searchQuery = ref('')
+const { addToCart } = useCart() 
+
+// I-update ang handleAddToCart function para tawagin ang composable
+const handleAddToCart = (product) => {
+  addToCart(product);
+  // Optional: Magdagdag ng notification dito kung gusto mo
+ 
+};
 
 const tabClass = 'rounded-full border border-slate-200 bg-white px-5 py-2 text-sm font-medium text-slate-600 transition hover:border-slate-300 hover:text-slate-900'
 const activeTabClass = 'rounded-full border border-slate-900 bg-slate-900 px-5 py-2 text-sm font-medium text-white transition'
 
-const { addToCart } = useCart();
-
-const handleAddToCart = (product, quantity = 1) => {
-  addToCart(product, quantity);
+const handleBuy = (product) => {
+  // For now, same as add to cart - you can customize this to go to checkout or product page
+  handleAddToCart(product);
 };
 
 const goToProduct = (productId) => {
@@ -141,28 +199,40 @@ const goToProduct = (productId) => {
 };
 
 const filteredProducts = computed(() => {
-  return props.products
-    .filter((product) => {
-      if (selectedTab.value === 'active') {
-        return product.status === 'active'
+  let results = props.products;
+
+  // 1. Filter gamit ang Tabs/Category
+  if (selectedTab.value !== 'all') {
+    results = results.filter((product) => {
+      const category = product.category.toLowerCase();
+      const tab = selectedTab.value.toLowerCase();
+      if (tab === 'tshirt') {
+        return category === 't-shirt' || category === 'tshirt';
       }
-      if (selectedTab.value === 'non-active') {
-        return product.status === 'non-active'
-      }
-      return true
-    })
-    .filter((product) => {
-      if (!searchQuery.value) return true
-      const query = searchQuery.value.toLowerCase()
+      return category === tab;
+    });
+  }
+
+  // 2. Filter gamit ang Search Bar (Functional na kahit 1st letter lang)
+  if (searchQuery.value) {
+    const query = searchQuery.value.toLowerCase();
+    results = results.filter((product) => {
       return (
         product.name.toLowerCase().includes(query) ||
-        product.category.toLowerCase().includes(query) ||
-        product.description.toLowerCase().includes(query)
-      )
-    })
-})
+        product.category.toLowerCase().includes(query)
+      );
+    });
+  }
 
-const formatPrice = (price) => parseFloat(price).toFixed(2)
+  return results;
+});
+
+const formatPrice = (price) => {
+  return new Intl.NumberFormat('en-PH', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(price);
+}
 </script>
 
 <style scoped>

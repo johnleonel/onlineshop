@@ -50,11 +50,41 @@ const clearCart = () => {
   saveCart();
 };
 
+const updateQuantity = (productId, quantity) => {
+  const existing = items.value.find((item) => item.id === productId);
+  if (!existing) {
+    return;
+  }
+
+  const previous = existing.quantity;
+  if (quantity <= 0) {
+    removeFromCart(productId);
+    return;
+  }
+
+  existing.quantity = quantity;
+  cartCount.value += quantity - previous;
+  saveCart();
+};
+
+const removeFromCart = (productId) => {
+  const index = items.value.findIndex((item) => item.id === productId);
+  if (index === -1) {
+    return;
+  }
+
+  cartCount.value -= items.value[index].quantity;
+  items.value.splice(index, 1);
+  saveCart();
+};
+
 export default function useCart() {
   return {
     items,
     cartCount,
     addToCart,
+    updateQuantity,
+    removeFromCart,
     clearCart,
   };
 }

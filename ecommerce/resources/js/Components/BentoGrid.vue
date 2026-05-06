@@ -14,7 +14,7 @@
               v-show="currentSlide === index"
               class="absolute inset-0"
             >
-              <!-- BINAGO: Mula opacity-40 ginawang opacity-100 para malinaw -->
+              
               <img :src="img" class="w-full h-full object-cover opacity-100 transition-opacity duration-1000" alt="slideshow-img">
               
               <!-- Gradient Overlay - pinanatili para mabasa pa rin yung text sa gitna -->
@@ -25,7 +25,7 @@
 
         <!-- Header Part -->
         <div class="relative z-10">
-          <div class="flex items-center mb-6">
+          <div class="flex items-center mb-2">
             <span class="text-7xl font-bold text-gray-900 tracking-tighter mr-6 leading-none">01</span>
             <div class="flex flex-col justify-center">
               <h2 class="text-2xl font-serif font-semibold text-gray-800 leading-none mb-1">Just a kid from</h2>
@@ -34,18 +34,24 @@
           </div>
 
           <!-- Floating Quote (Right) -->
-          <div class="absolute top-0 right-0 bg-white/70 backdrop-blur-md rounded-2xl py-3 px-6 shadow-xl border border-gray-100">
+          <div class="absolute top-0 right-0 bg-white/70 backdrop-blur-md rounded-2xl py-3 px-2 shadow-xl border border-gray-100">
             <p class="text-sm italic font-medium text-gray-700 tracking-tight">
               "In dressing well, self-confidence is quickly achieved."
             </p>
           </div>
 
-          <!-- Main Titles -->
-          <div class="mt-4">
-            <h1 class="text-8xl font-serif font-bold text-gray-900 tracking-tighter leading-none">Chill fam</h1>
-            <p class="mt-4 text-xl font-medium text-gray-600 max-w-md leading-relaxed">
-              Style is more than fabric—it’s the story of confidence, courage, and character stitched together.
-            </p>
+          
+
+         <!-- Main Titles Container -->
+          <div class="flex flex-col justify-center min-h-[400px] mt-4">
+            <div class="text-left">
+              <h1 class="text-8xl font-serif font-bold text-gray-900 tracking-tighter leading-[0.8]">
+                CHLLERX
+              </h1>
+              <p class="mt-2 text-x2 font-small text-gray-600 max-w-md leading-relaxed">
+                Style is more than fabric—it’s the story of confidence, courage, and character stitched together.
+              </p>
+            </div>
           </div>
         </div>
 
@@ -77,55 +83,64 @@
 
       <!-- Sidebar -->
       <div class="col-span-12 md:col-span-4 space-y-6">
-        <div class="bg-white rounded-3xl shadow-lg p-6">
+        <div class="bg-white rounded-3xl shadow-lg p-6 text-center">
           <h3 class="text-lg font-semibold mb-4">Popular color</h3>
-          <div class="flex space-x-3">
+          <div class="flex justify-center items-center gap-3">
+            <div class="w-8 h-8 bg-[#5c3a21] rounded-full cursor-pointer border-2 border-gray-300"></div>
             <div class="w-8 h-8 bg-black rounded-full cursor-pointer border-2 border-gray-300"></div>
             <div class="w-8 h-8 bg-white rounded-full cursor-pointer border-2 border-gray-300"></div>
-            <div class="w-8 h-8 bg-red-500 rounded-full cursor-pointer border-2 border-gray-300"></div>
-            <div class="w-8 h-8 bg-green-500 rounded-full cursor-pointer border-2 border-gray-300"></div>
-            <div class="w-8 h-8 bg-blue-500 rounded-full cursor-pointer border-2 border-gray-300"></div>
           </div>
         </div>
 
-        <div class="bg-white rounded-3xl shadow-lg p-6 relative h-52 overflow-hidden">
-          <div class="grid grid-cols-2 gap-2 mb-4 opacity-30">
-            <img v-for="(image, index) in newDropImages" :key="index" :src="image" alt="Hoodie" class="w-full h-20 object-cover rounded-lg">
-          </div>
-          <div class="absolute inset-0 flex items-center justify-center bg-black/50 rounded-3xl">
-            <p class="text-white font-bold text-lg uppercase tracking-wider">new drop limited only!</p>
-          </div>
-          <button class="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md">✏️</button>
+         <!-- new drop -->
+<div class="relative overflow-hidden bg-white shadow-lg rounded-3xl group">
+  
+        <!-- Grid Container -->
+        <div class="grid grid-cols-2 gap-2 p-2 transition-all duration-500 opacity-70">
+          <img 
+            v-for="(image, index) in newDropImages" 
+            :key="index" 
+            :src="image" 
+            alt="Hoodie" 
+            class="w-full aspect-[4/5] object-cover rounded-xl shadow-sm"
+          >
         </div>
 
-        <!-- Camou Jorts Section -->
-        <div class="bg-[#e2e2e2] rounded-3xl shadow-lg p-5 h-52 flex gap-4 items-center">
-          <div class="flex-1 flex flex-col justify-between h-full py-1">
-            <div>
-              <h3 class="text-[#2a4365] font-serif font-bold text-lg leading-tight uppercase">Camou Jorts</h3>
-              <p class="text-gray-700 text-sm italic">Few Stocks Left</p>
-            </div>
-            <div class="w-full h-20 bg-gray-300 rounded-2xl overflow-hidden mt-2 border border-white/50">
-                <img src="https://picsum.photos/seed/jorts/200/200" class="w-full h-full object-cover" alt="Preview">
-            </div>
-            <div class="flex items-center gap-2 mt-2">
-               <button class="w-8 h-8 bg-gray-300/50 rounded-full flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17l10-10M7 7h10v10"/></svg>
-               </button>
-               <div class="flex gap-1">
-                 <div class="w-5 h-5 rounded-full bg-white flex items-center justify-center text-[10px]">f</div>
-                 <div class="w-5 h-5 rounded-full bg-white flex items-center justify-center text-[10px]">ig</div>
-               </div>
-            </div>
-          </div>
-          <div class="w-1/2 h-full grid grid-cols-2 gap-1 bg-gray-400/20 p-1 rounded-2xl overflow-hidden">
-             <img src="https://picsum.photos/seed/11/100/100" class="w-full h-full object-cover rounded-lg" alt="jorts-1">
-             <img src="https://picsum.photos/seed/12/100/100" class="w-full h-full object-cover rounded-lg" alt="jorts-2">
-             <img src="https://picsum.photos/seed/13/100/100" class="w-full h-full object-cover rounded-lg" alt="jorts-3">
-             <img src="https://picsum.photos/seed/14/100/100" class="w-full h-full object-cover rounded-lg" alt="jorts-4">
-          </div>
+        <!-- Overlay Text Container -->
+        <div class="absolute inset-0 flex items-center justify-center bg-black/40 rounded-3xl">
+          <p class="px-4 text-xl font-black text-center text-white uppercase tracking-tighter md:text-2xl">
+            new drop limited only!
+          </p>
         </div>
+      </div>
 
+  <!-- Camou Jorts Section -->
+<div class="bg-[#e2e2e2] rounded-3xl shadow-lg p-5 h-52 flex gap-4 items-center">
+  
+  <!-- Left Side: Text and Buttons -->
+      <div class="flex flex-col justify-center h-full py-1 min-w-fit">
+        <div class="flex flex-col">
+          <h3 class="text-[#000000] font-serif font-bold text-sm uppercase whitespace-nowrap tracking-tight">
+            More Products
+          </h3>
+          <p class="text-gray-700 text-[10px] italic">70+ items.</p>
+        </div>
+        
+        <div class="flex items-center gap-2 mt-2">
+          <button class="w-8 h-8 bg-gray-300/50 rounded-full flex items-center justify-center hover:bg-gray-300 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17l10-10M7 7h10v10"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Side: 4 Picture -->
+      <div class="w-[70%] h-full grid grid-cols-2 grid-rows-2 gap-1.5 rounded-2xl overflow-hidden">
+        <img src="/images/more1.jpg" class="w-full h-full object-cover" alt="jorts-1">
+        <img src="/images/more2.jpg" class="w-full h-full object-cover" alt="jorts-2">
+        <img src="/images/more3.jpg" class="w-full h-full object-cover" alt="jorts-3">
+        <img src="/images/more4.jpg" class="w-full h-full object-cover" alt="jorts-4">
+      </div>
+    </div>
       </div>
     </div>
   </div>
@@ -148,32 +163,18 @@ const slideshowImages = ref([]); // Magsisimula bilang blanko
 
 let timer = null;
 
-onMounted(async () => {
-  // Kunin ang mga tunay na MotoGP image gamit ang isang dummy API o custom service
-  // Dito, gagamitin natin ang Picsum na may MotoGP seed para sa demonstration.
-  // Sa totoong scenario, ito ay maaaring manggaling sa iyong backend o isang sports image API.
-  try {
-    const response = await fetch('https://picsum.photos/v2/list?page=1&limit=6');
-    if (!response.ok) {
-        throw new Error('Failed to fetch images');
-    }
-    const data = await response.json();
-    slideshowImages.value = data.map(item => `https://picsum.photos/id/${item.id}/800/600?grayscale&blur=2`); // Dummy seed, grayscale at blur para mabilis magload
+onMounted(() => {
+  slideshowImages.value = [
+    '/images/slide-1.jpg',
+    '/images/slide-2.jpg',
+    '/images/slide-3.jpg',
+    '/images/slide-4.jpg'
+  ];
 
-    // Magsimula ng timer matapos makuha ang mga images
-    if (slideshowImages.value.length > 0) {
-        timer = setInterval(() => {
-          currentSlide.value = (currentSlide.value + 1) % slideshowImages.value.length;
-        }, 4000);
-    }
-  } catch (error) {
-    console.error('Error fetching images:', error);
-    // Magtakda ng fallback images o pangasiwaan ang error
-    slideshowImages.value = [
-      'https://picsum.photos/seed/moto1/800/600',
-      'https://picsum.photos/seed/moto2/800/600',
-      'https://picsum.photos/seed/moto3/800/600'
-    ]
+  if (slideshowImages.value.length > 0) {
+    timer = setInterval(() => {
+      currentSlide.value = (currentSlide.value + 1) % slideshowImages.value.length;
+    }, 4000);
   }
 });
 
