@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\DealsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -12,6 +13,9 @@ Route::get('/', function () {
 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
+
+Route::get('/deals', [DealsController::class, 'index'])->name('deals.index');
+Route::get('/deals/{product}', [DealsController::class, 'show'])->name('deals.show');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

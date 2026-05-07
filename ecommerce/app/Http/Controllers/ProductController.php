@@ -63,7 +63,7 @@ class ProductController extends Controller
                 'statusLabel' => 'Active',
                 'rating' => '4.6',
                 'description' => 'Lightweight shorts built for comfort and movement.',
-                'image' => '/images/hood5.jpg'
+                'image' => '/images/shot1.jpg'
             ],
             [
                 'id' => 6,
@@ -99,15 +99,15 @@ class ProductController extends Controller
                 'image' => '/images/hood8.jpg'
             ],
             [
-            'id' => 9,
-            'name' => 'Urban Polo',
-            'price' => 1500.00,
-            'category' => 'Polo',
-            'status' => 'active',
-            'statusLabel' => 'New Arrival',
-            'rating' => '4.8',
-            'description' => 'Water-resistant windbreaker perfect for the rainy season.',
-            'image' => '/images/more1.jpg'
+                'id' => 9,
+                'name' => 'Urban Polo',
+                'price' => 1500.00,
+                'category' => 'Polo',
+                'status' => 'active',
+                'statusLabel' => 'New Arrival',
+                'rating' => '4.8',
+                'description' => 'Water-resistant windbreaker perfect for the rainy season.',
+                'image' => '/images/more1.jpg'
             ],
             [
                 'id' => 10,
@@ -189,6 +189,8 @@ class ProductController extends Controller
             ];
         }
 
+        
+
     public function index(Request $request)
     {
         $categoryQuery = strtolower($request->query('category', 'all'));
@@ -219,4 +221,6 @@ class ProductController extends Controller
             'product' => $productDetails,
         ]);
     }
+
+
 }

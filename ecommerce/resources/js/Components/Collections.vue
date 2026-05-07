@@ -9,45 +9,47 @@ const props = defineProps({
       {
         name: 'ALL DESIGN',
         items: [
-          { id: 1, name: 'TROPICAL POLO', price: 875.00, image: '/images/hood1.jpg', category: 'POLO' },
+          { id: 1, name: 'TROPICAL POLO', price: 875.00, image: '/images/hood20.jpg', category: 'POLO' },
           { id: 2, name: 'DJ ', price: 1000.00, image: '/images/hood2.jpg', category: 'Longsleeves' },
           { id: 3, name: 'RACISM', price: 1000.00, image: '/images/hood3.jpg', category: 'Longsleeves' },
           { id: 4, name: 'BMW (BLACK) TEE', price: 850.00, image: '/images/hood4.jpg', category: 'Tee' },
-          { id: 5, name: 'REDBULL RACING', price: 850.00, image: '/images/hood5.jpg', category: 'Tee' },
-          { id: 6, name: 'FERARI RACING', price: 800.00, image: '/images/hood6.jpg', category: 'Tee', discount: 5 },
-          { id: 7, name: 'DUCATI RACING', price: 750.00, image: '/images/hood7.jpg', category: 'Tee' },
-          { id: 8, name: 'CLASSIC TEE', price: 700.00, image: '/images/hood8.jpg', category: 'Tee' },
+          { id: 5, name: 'DLY SCORP', price: 850.00, image: '/images/hood13.jpg', category: 'Tee' },
+          { id: 6, name: 'RISE', price: 800.00, image: '/images/hood14.jpg', category: 'Tee', discount: 5 },
+          { id: 7, name: 'DVL STASH', price: 750.00, image: '/images/hood17.jpg', category: 'Tee' },
+          { id: 8, name: 'GHETO TEE', price: 700.00, image: '/images/hood16.jpg', category: 'Tee' },
         ]
       },
       {
         name: 'STREET STYLE',
         items: [
           { id: 13, name: 'SUMMER HOODIE', price: 2100.00, image: '/images/hood2.jpg', category: 'Hoodie' },
-          { id: 14, name: 'TROPICAL TEE', price: 900.00, image: '/images/hood10.jpg', category: 'Tee' },
+          { id: 14, name: 'TROPICAL TEE', price: 900.00, image: '/images/hood20.jpg', category: 'Tee' },
         ]
       },
       {
         name: 'BASIC',
         items: [
-          { id: 15, name: 'FIRE TEE', price: 950.00, image: '/images/hood11.jpg', category: 'Tee' },
+          { id: 15, name: 'FIRE TEE', price: 950.00, image: '/images/hood17.jpg', category: 'Tee' },
         ]
       },
       {
-        name: 'STRAIN',
+        name: 'CASHUAL',
         items: [
-          { id: 16, name: 'ATHLETIC WEAR', price: 1200.00, image: '/images/hood1.jpg', category: 'Athletic' },
+          { id: 16, name: 'ATHLETIC WEAR', price: 1200.00, image: '/images/hood14.jpg', category: 'Athletic' },
         ]
       },
       {
-        name: 'GRATEFUL',
+        name: 'STUNNA',
         items: [
-          { id: 17, name: 'PEACE TEE', price: 850.00, image: '/images/hood12.jpg', category: 'Tee' },
+          { id: 17, name: 'PEACE TEE', price: 850.00, image: '/images/hood3.jpg', category: 'Tee' },
+          { id: 18, name: 'PEACE TEE', price: 850.00, image: '/images/hood14.jpg', category: 'Tee' },
         ]
       },
       {
-        name: 'ITS ALL WORTH IT',
+        name: 'DRIP',
         items: [
-          { id: 18, name: 'WORTH IT TEE', price: 950.00, image: '/images/hood8.jpg', category: 'Tee' },
+          { id: 19, name: 'WORTH IT TEE', price: 950.00, image: '/images/hood2.jpg', category: 'Tee' },
+          { id: 20, name: 'WORTH IT TEE', price: 950.00, image: '/images/hood4.jpg', category: 'Tee' },
         ]
       },
     ]
