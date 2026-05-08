@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from 'vue';
 import { Link, router } from '@inertiajs/vue3'; // Gamitin ang Inertia router, hindi vue-router
+import useCart from '@/composables/useCart';
+
+const { addToCart } = useCart();
 
 const props = defineProps({
   collections: {
@@ -9,14 +12,14 @@ const props = defineProps({
       {
         name: 'ALL DESIGN',
         items: [
-          { id: 1, name: 'TROPICAL POLO', price: 875.00, image: '/images/hood20.jpg', category: 'POLO' },
-          { id: 2, name: 'DJ ', price: 1000.00, image: '/images/hood2.jpg', category: 'Longsleeves' },
-          { id: 3, name: 'RACISM', price: 1000.00, image: '/images/hood3.jpg', category: 'Longsleeves' },
-          { id: 4, name: 'BMW (BLACK) TEE', price: 850.00, image: '/images/hood4.jpg', category: 'Tee' },
-          { id: 5, name: 'DLY SCORP', price: 850.00, image: '/images/hood13.jpg', category: 'Tee' },
-          { id: 6, name: 'RISE', price: 800.00, image: '/images/hood14.jpg', category: 'Tee', discount: 5 },
-          { id: 7, name: 'DVL STASH', price: 750.00, image: '/images/hood17.jpg', category: 'Tee' },
-          { id: 8, name: 'GHETO TEE', price: 700.00, image: '/images/hood16.jpg', category: 'Tee' },
+          { id: 1, name: 'Classic brown polo', price: 875.00, image: '/images/hood14.jpg', category: 'Polo' },
+          { id: 2, name: 'Xiaomi 14T', price: 1000.00, image: '/images/hood2.jpg', category: 'Polo' },
+          { id: 3, name: 'Bomber polo', price: 1000.00, image: '/images/hood3.jpg', category: 'Polo' },
+          { id: 4, name: 'Classic Cotton Tshirt', price: 850.00, image: '/images/hood4.jpg', category: 'Tshirt' },
+          { id: 5, name: 'Redbull Shirt', price: 850.00, image: '/images/shot1.jpg', category: 'Shirts' },
+          { id: 6, name: 'Ferrari Shirt', price: 800.00, image: '/images/hood17.jpg', category: 'Shirts', discount: 5 },
+          { id: 7, name: 'Ducati Polo Shirt', price: 750.00, image: '/images/more5.jpg', category: 'Polo' },
+          { id: 8, name: 'B&W Polo Shirt', price: 700.00, image: '/images/hood21.jpg', category: 'Polo' },
         ]
       },
       {
@@ -72,6 +75,14 @@ const formatPrice = (price) => {
 const goToProducts = () => {
   router.visit('/products');
 };
+
+const goToProduct = (productId) => {
+  router.visit(`/products/${productId}`);
+};
+
+const handleAddToCart = (product) => {
+  addToCart(product);
+};
 </script>
 
 <template>
@@ -104,6 +115,7 @@ const goToProducts = () => {
           v-for="item in activeCollection.items"
           :key="item.id"
           class="group cursor-pointer"
+          @click="goToProduct(item.id)"
         >
           <div class="relative overflow-hidden rounded-lg bg-gray-100 mb-4 aspect-square">
             <img

@@ -2,104 +2,84 @@
   <AppLayout>
     <Head :title="product.name" />
 
-    <div class="max-w-7xl mx-auto px-4 py-10">
-      <div class="mb-6 flex items-center gap-3 text-sm text-slate-500">
+    <!-- Binabaan ang max-width para mas "compact" ang tingin sa screen -->
+    <div class="max-w-6xl mx-auto px-4 py-8">
+      
+      <!-- Breadcrumbs -->
+      <div class="mb-6 flex items-center gap-3 text-xs text-slate-500">
         <Link href="/products" class="hover:text-slate-900 font-medium">Products</Link>
         <span>/</span>
         <span class="text-slate-900">{{ product.name }}</span>
       </div>
 
-      <div class="grid gap-10 lg:grid-cols-[1.45fr_0.95fr]">
-        <section class="space-y-6">
-          <div class="rounded-[2rem] bg-white p-6 shadow-sm">
+      <!-- Main Product Grid -->
+      <div class="grid gap-8 lg:grid-cols-2 items-start">
+        
+        <!-- LEFT: Image Section -->
+        <section>
+          <div class="rounded-[2rem] bg-white p-4 shadow-sm border border-slate-100">
             <img
               :src="product.image"
               :alt="product.name"
-              class="w-full rounded-[2rem] object-cover"
+              class="w-full rounded-[1.5rem] object-cover aspect-square"
             />
 
-            <div class="mt-5 grid gap-3 sm:grid-cols-5">
+            <!-- Thumbnails (Pinaliit din) -->
+            <div class="mt-4 grid gap-2 grid-cols-5">
               <button
                 v-for="(thumb, index) in thumbnailImages"
                 :key="index"
-                type="button"
-                class="overflow-hidden rounded-[1.5rem] border border-slate-200 bg-slate-50 transition hover:border-slate-300"
+                class="overflow-hidden rounded-xl border border-slate-200 transition hover:border-slate-400"
               >
-                <img :src="thumb" :alt="`${product.name} preview ${index + 1}`" class="h-20 w-full object-cover" />
-              </button>
-              <button
-                v-if="moreThumbnails > 0"
-                type="button"
-                class="group overflow-hidden rounded-[1.5rem] border border-slate-200 bg-slate-50 text-center text-slate-500 transition hover:border-slate-300"
-              >
-                <div class="flex h-20 flex-col items-center justify-center">
-                  <span class="text-xl font-semibold">+{{ moreThumbnails }}</span>
-                  <span class="text-xs">more</span>
-                </div>
+                <img :src="thumb" class="h-14 w-full object-cover" />
               </button>
             </div>
           </div>
+        </section>
 
-          <div class="rounded-[2rem] bg-white p-6 shadow-sm">
-            <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-              <div>
-                <p class="text-xs uppercase tracking-[0.35em] text-slate-400">Peanuts Long Sleeve Sweatshirt</p>
-                <h1 class="mt-3 text-3xl font-semibold text-slate-900 sm:text-4xl">{{ product.name }}</h1>
-                <p class="mt-4 max-w-2xl text-sm leading-7 text-slate-600">
-                  A baseball-themed collection, a favorite of the Peanuts friends. This collection features Snoopy and his friends enjoying baseball...
-                </p>
-              </div>
-
-              <div class="rounded-[1.75rem] border border-slate-200 bg-slate-50 px-5 py-4">
-                <div class="flex items-center gap-3 text-sm text-slate-700">
-                  <span class="font-semibold">5K+ Sold</span>
-                  <span class="flex items-center gap-1 text-amber-500">4.9</span>
-                  <span class="text-slate-400">(225 reviews)</span>
-                </div>
+        <!-- RIGHT: Product Info -->
+        <section class="flex flex-col gap-5">
+          <div class="rounded-[2rem] bg-white p-6 shadow-sm border border-slate-100">
+            <div>
+              <p class="text-[10px] uppercase tracking-[0.3em] text-slate-400">Classic Collection</p>
+              <h1 class="mt-2 text-2xl font-bold text-slate-900">{{ product.name }}</h1>
+              
+              <div class="mt-3 flex items-center gap-3 text-xs">
+                <span class="bg-slate-100 px-2 py-1 rounded-md font-semibold">5K+ Sold</span>
+                <span class="text-amber-500 font-bold">★ 4.9</span>
+                <span class="text-slate-400">(225 reviews)</span>
               </div>
             </div>
 
-            <div class="mt-8 grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
-              <div>
-                <div class="flex items-center gap-4">
-                  <p class="text-4xl font-bold text-slate-900">${{ formatPrice(product.price) }}</p>
-                  <p class="text-sm text-slate-400 line-through">${{ formatPrice(originalPrice) }}</p>
-                </div>
-              </div>
-              <div class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-100 px-4 py-2 text-sm text-slate-600">
-                <span class="font-semibold text-slate-900">Color:</span>
-                <span>{{ selectedColorLabel }}</span>
-              </div>
+            <div class="mt-6 flex items-baseline gap-3">
+              <span class="text-3xl font-black text-slate-900">₱{{ formatPrice(product.price) }}</span>
+              <span class="text-sm text-slate-400 line-through">₱{{ formatPrice(originalPrice) }}</span>
             </div>
 
-            <div class="mt-8 grid gap-4">
+            <!-- Selectors -->
+            <div class="mt-6 space-y-5">
               <div>
-                <div class="flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.28em] text-slate-500">Color</div>
-                <div class="mt-4 flex items-center gap-3">
+                <label class="text-[11px] font-bold uppercase text-slate-400 tracking-wider">Select Color</label>
+                <div class="mt-2 flex gap-2">
                   <button
                     v-for="color in colors"
                     :key="color.name"
-                    type="button"
-                    :class="['h-11 w-11 rounded-full border transition', color.name === selectedColor ? 'border-slate-900' : 'border-slate-200']"
-                    :style="{ backgroundColor: color.code }"
                     @click="selectedColor = color.name"
-                    :aria-label="color.name"
+                    :class="['h-8 w-8 rounded-full border-2 transition', selectedColor === color.name ? 'border-slate-900 scale-110' : 'border-transparent']"
+                    :style="{ backgroundColor: color.code }"
                   ></button>
                 </div>
               </div>
 
               <div>
-                <div class="flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.28em] text-slate-500">Size</div>
-                <div class="mt-4 flex flex-wrap gap-3">
+                <label class="text-[11px] font-bold uppercase text-slate-400 tracking-wider">Size</label>
+                <div class="mt-2 flex flex-wrap gap-2">
                   <button
                     v-for="size in sizes"
                     :key="size"
-                    type="button"
                     @click="selectedSize = size"
-                    :class="[
-                      'min-w-[46px] rounded-2xl border px-3 py-2 text-sm font-semibold transition',
-                      selectedSize === size ? 'border-slate-900 bg-slate-900 text-white' : 'border-slate-200 bg-white text-slate-700'
-                    ]"
+                    :class="['h-10 w-12 rounded-xl border text-xs font-bold transition', 
+                      selectedSize === size ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400']"
                   >
                     {{ size }}
                   </button>
@@ -107,104 +87,68 @@
               </div>
             </div>
 
-            <div class="mt-8 grid gap-3 sm:grid-cols-[1fr_auto]">
-              <button
-                type="button"
-                class="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-6 py-4 text-sm font-semibold text-white transition hover:bg-emerald-700"
-                @click="handleAddToCart"
-              >
+            <!-- Buttons -->
+            <div class="mt-8 grid grid-cols-2 gap-3">
+              <button @click="handleAddToCart" class="bg-emerald-600 text-white py-3 rounded-xl font-bold text-sm hover:bg-emerald-700 transition">
                 + Add to Cart
               </button>
-              <button
-                type="button"
-                class="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-6 py-4 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
-              >
-                Buy this Item
-              </button>
-            </div>
-
-            <div class="mt-6 flex flex-wrap gap-3 text-sm text-slate-500">
-              <button type="button" class="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 transition hover:border-slate-300">
-                <span>💬</span>
-                Chat
-              </button>
-              <button type="button" class="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 transition hover:border-slate-300">
-                <span>🤍</span>
-                Wishlist
-              </button>
-              <button type="button" class="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 transition hover:border-slate-300">
-                <span>↗</span>
-                Share
+              <button class="bg-slate-900 text-white py-3 rounded-xl font-bold text-sm hover:bg-slate-800 transition">
+                Buy Now
               </button>
             </div>
           </div>
 
-          <div class="rounded-[2rem] bg-white p-6 shadow-sm">
-            <div class="flex flex-wrap items-center gap-4 border-b border-slate-200 pb-4">
-              <button
-                v-for="tab in tabs"
-                :key="tab"
-                type="button"
-                @click="selectedTab = tab"
-                :class="[
-                  'rounded-full px-4 py-2 text-sm font-semibold transition',
-                  selectedTab === tab ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                ]"
-              >
-                {{ tab }}
-              </button>
-            </div>
-
-            <div class="mt-6">
-              <div v-if="selectedTab === 'Reviews'" class="grid gap-6 xl:grid-cols-[0.95fr_0.65fr]">
-                <div class="space-y-4">
-                  <div class="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-5">
-                    <div class="flex items-center gap-4">
-                      <div class="text-5xl font-bold text-slate-900">4.9</div>
-                      <div>
-                        <div class="text-sm text-slate-500">Rating</div>
-                        <div class="mt-1 text-sm text-slate-500">225 reviews</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="space-y-4">
-                    <div class="rounded-[1.75rem] border border-slate-200 p-5">
-                      <div class="flex items-start justify-between gap-4">
-                        <div>
-                          <p class="text-sm font-semibold text-slate-900">James Gouse</p>
-                          <p class="mt-1 text-xs text-slate-500">Oct 13, 2024</p>
-                        </div>
-                        <div class="flex items-center gap-1 text-amber-500">
-                          <span>★★★★★</span>
-                        </div>
-                      </div>
-                      <p class="mt-4 text-sm leading-6 text-slate-600">
-                        A simple Sweater but makes the user seem neat and beautiful, the material is soft, but when worn it often wrinkles because of sitting for too long.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="space-y-4">
-                  <div v-for="rating in ratingBars" :key="rating.label" class="space-y-2">
-                    <div class="flex items-center justify-between text-sm text-slate-600">
-                      <span>{{ rating.label }}</span>
-                      <span>{{ rating.count }}</span>
-                    </div>
-                    <div class="h-2 rounded-full bg-slate-200">
-                      <div :style="{ width: rating.width }" class="h-full rounded-full bg-emerald-600"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div v-else class="text-sm text-slate-600">
-                <p>More information will appear here for the selected tab.</p>
-              </div>
-            </div>
+          <!-- Tab Toggles (Dito pipindutin para lumabas ang review) -->
+          <div class="flex gap-2">
+            <button 
+              v-for="tab in tabs" 
+              :key="tab"
+              @click="selectedTab = (selectedTab === tab ? '' : tab)"
+              :class="['px-5 py-2 rounded-full text-xs font-bold transition', 
+                selectedTab === tab ? 'bg-slate-900 text-white' : 'bg-white text-slate-500 border border-slate-200']"
+            >
+              {{ tab }}
+            </button>
           </div>
         </section>
+      </div>
+
+      <!-- CONDITIONAL SECTION: Lalabas lang ito sa ibaba pag may selectedTab -->
+      <transition name="fade">
+        <div v-if="selectedTab === 'Reviews'" class="mt-8 rounded-[2rem] bg-white p-8 shadow-sm border border-slate-100">
+          <h3 class="text-xl font-bold mb-6">Customer Reviews</h3>
+          
+          <div class="grid gap-8 lg:grid-cols-[250px_1fr]">
+            <!-- Rating Stats -->
+            <div class="space-y-3">
+              <div class="text-5xl font-black text-slate-900">4.9</div>
+              <p class="text-sm text-slate-500">Average Rating</p>
+              <div v-for="rating in ratingBars" :key="rating.label" class="flex items-center gap-2">
+                <span class="text-xs font-bold w-3">{{ rating.label }}</span>
+                <div class="h-1.5 flex-1 bg-slate-100 rounded-full overflow-hidden">
+                  <div :style="{ width: rating.width }" class="h-full bg-emerald-500"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Actual Review List -->
+            <div class="space-y-6">
+              <div class="border-b border-slate-100 pb-6">
+                <div class="flex justify-between items-center">
+                  <p class="font-bold text-slate-900">James Gouse</p>
+                  <span class="text-amber-500 text-xs">★★★★★</span>
+                </div>
+                <p class="mt-2 text-sm text-slate-600 leading-relaxed">
+                  Material is very soft and premium. Fits perfectly!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+      
+      <div v-if="selectedTab === 'Details'" class="mt-8 rounded-[2rem] bg-white p-8 shadow-sm border border-slate-100">
+         <p class="text-slate-600">Detailed product specifications and material info here...</p>
       </div>
     </div>
   </AppLayout>
@@ -223,10 +167,16 @@ const props = defineProps({
   },
 })
 
+// Logic para sa Cart
 const { addToCart } = useCart()
 const quantity = ref(1)
-const selectedColor = ref('Green')
+
+// UI State
+const selectedColor = ref('53 Green')
 const selectedSize = ref('S')
+const selectedTab = ref('') // Naka-empty para nakatago ang reviews sa simula
+
+// Data
 const colors = [
   { name: '53 Green', code: '#8AA491' },
   { name: '12 Peach', code: '#E0C7B0' },
@@ -234,18 +184,17 @@ const colors = [
 ]
 const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
 const tabs = ['Details', 'Reviews', 'Discussion']
-const selectedTab = ref('Reviews')
 
-const thumbnailImages = [
+// Computed Properties
+const thumbnailImages = computed(() => [
   props.product.image,
   props.product.image,
   props.product.image,
   props.product.image,
-]
+])
 const moreThumbnails = 4
 
 const originalPrice = computed(() => props.product.price + 34)
-const selectedColorLabel = computed(() => selectedColor)
 
 const ratingBars = [
   { label: '5', count: 184, width: '75%' },
@@ -255,25 +204,10 @@ const ratingBars = [
   { label: '1', count: 2, width: '5%' },
 ]
 
+// Methods
 const formatPrice = (price) => parseFloat(price).toFixed(2)
 
 const handleAddToCart = () => {
   addToCart(props.product, quantity.value)
 }
-
-const increaseQuantity = () => {
-  quantity.value += 1
-}
-
-const decreaseQuantity = () => {
-  if (quantity.value > 1) {
-    quantity.value -= 1
-  }
-}
 </script>
-
-<style scoped>
-button:focus {
-  outline: none;
-}
-</style>

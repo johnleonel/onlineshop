@@ -1,5 +1,8 @@
 <script setup>
+import { Link } from '@inertiajs/vue3';
+
 const saleItems = [
+
   { id: 1, name: 'WIZARD LORD TEE', price: 750.00, image: '/images/hood20.jpg' },
   { id: 2, name: 'REMINDER TEE', price: 750.00, image: '/images/hood2.jpg' },
   { id: 3, name: 'SPIRITUAL BREATH TEE', price: 750.00, image: '/images/hood3.jpg' },
@@ -29,11 +32,21 @@ const formatPrice = (value) => value.toFixed(2);
 
       <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-6">
         <!-- Container: White background, no border, with hover shadow -->
-        <div v-for="item in saleItems" :key="item.id" class="group overflow-hidden rounded-3xl bg-white p-4 text-center transition hover:-translate-y-1 hover:shadow-xl">
-          
+        <Link
+          v-for="item in saleItems"
+          :key="item.id"
+          :href="`/products/${item.id}`"
+          class="group block overflow-hidden rounded-3xl bg-white p-4 text-center transition hover:-translate-y-1 hover:shadow-xl"
+        >
+
           <!-- Image Box: White background -->
           <div class="aspect-square overflow-hidden rounded-3xl bg-white p-4">
-            <img :src="item.image" :alt="item.name" class="h-full w-full object-cover transition duration-300 group-hover:scale-105" />
+            <img
+              :src="item.image"
+              :alt="item.name"
+              class="h-full w-full object-contain transition duration-300 group-hover:scale-105"
+              loading="lazy"
+            />
           </div>
 
           <div class="mt-4">
@@ -41,7 +54,7 @@ const formatPrice = (value) => value.toFixed(2);
             <p class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-900">{{ item.name }}</p>
             <p class="mt-1 text-sm font-bold text-slate-900">₱{{ formatPrice(item.price) }}</p>
           </div>
-        </div>
+        </Link>
       </div>
     </div>
   </section>

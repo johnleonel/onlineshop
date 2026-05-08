@@ -97,28 +97,6 @@ const goToProduct = (productId) => {
 
                             <!-- Rating -->
                             <p class="text-xs text-yellow-500 font-bold mb-4">{{ product.rating }} ★</p>
-
-                            <!-- Action Buttons -->
-                            <div class="mt-auto flex gap-2">
-                                <button
-                                    type="button"
-                                    class="flex-1 inline-flex items-center justify-center rounded-lg bg-black px-4 py-2.5 text-xs font-bold text-white transition hover:bg-gray-800"
-                                    @click.stop="handleBuy(product)"
-                                >
-                                    BUY NOW
-                                </button>
-
-                                <button
-                                    type="button"
-                                    class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black text-white transition hover:bg-gray-800"
-                                    @click.stop="handleAddToCart(product)"
-                                    title="Add to cart"
-                                >
-                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.1 5H19M7 13v8a2 2 0 002 2h10a2 2 0 002-2v-3"/>
-                                    </svg>
-                                </button> 
-                            </div>
                         </div>
                     </div>
                 </div>

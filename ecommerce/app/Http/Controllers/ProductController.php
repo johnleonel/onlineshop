@@ -19,7 +19,7 @@ class ProductController extends Controller
                 'statusLabel' => 'outofstock',
                 'rating' => '4.6',
                 'description' => 'Sharp 27-inch gaming monitor with high refresh rate.',
-                'image' => '/images/hood1.jpg'
+                'image' => '/images/hood14.jpg'
             ],
             [
                 'id' => 2,
@@ -74,7 +74,7 @@ class ProductController extends Controller
                 'statusLabel' => 'Active',
                 'rating' => '4.6',
                 'description' => 'Breathable sando for warm weather wear.',
-                'image' => '/images/hood6.jpg'
+                'image' => '/images/hood17.jpg'
             ],
             [
                 'id' => 7,
@@ -85,7 +85,7 @@ class ProductController extends Controller
                 'statusLabel' => 'Active',
                 'rating' => '4.6',
                 'description' => 'Stylish phone with a vivid display and long battery life.',
-                'image' => '/images/hood7.jpg'
+                'image' => '/images/more5.jpg'
             ],
             [
                 'id' => 8,
@@ -96,7 +96,7 @@ class ProductController extends Controller
                 'statusLabel' => 'Active',
                 'rating' => '4.6',
                 'description' => 'Reliable 24-inch display for office and entertainment.',
-                'image' => '/images/hood8.jpg'
+                'image' => '/images/hood21.jpg'
             ],
             [
                 'id' => 9,
@@ -177,6 +177,138 @@ class ProductController extends Controller
             ],
             [
                 'id' => 16,
+                'name' => 'Oversized Flannel Shirt',
+                'price' => 850.00,
+                'category' => 'Jackets',
+                'status' => 'active',
+                'statusLabel' => 'Active',
+                'rating' => '4.6',
+                'description' => 'Soft flannel shirt, perfect as an outer layer.',
+                'image' => '/images/more4.jpg'
+            ],
+            [
+                'id' => 17,
+                'name' => 'Oversized Flannel Shirt',
+                'price' => 850.00,
+                'category' => 'Jackets',
+                'status' => 'active',
+                'statusLabel' => 'Active',
+                'rating' => '4.6',
+                'description' => 'Soft flannel shirt, perfect as an outer layer.',
+                'image' => '/images/sale1.jpg'
+            ],
+            [
+                'id' => 18,
+                'name' => 'Oversized Flannel Shirt',
+                'price' => 850.00,
+                'category' => 'Jackets',
+                'status' => 'active',
+                'statusLabel' => 'Active',
+                'rating' => '4.6',
+                'description' => 'Soft flannel shirt, perfect as an outer layer.',
+                'image' => '/images/sale2.jpg'
+            ],
+            [
+                'id' => 19,
+                'name' => 'Oversized Flannel Shirt',
+                'price' => 850.00,
+                'category' => 'Jackets',
+                'status' => 'active',
+                'statusLabel' => 'Active',
+                'rating' => '4.6',
+                'description' => 'Soft flannel shirt, perfect as an outer layer.',
+                'image' => '/images/sale3.jpg'
+            ],
+            [
+                'id' => 20,
+                'name' => 'Oversized Flannel Shirt',
+                'price' => 850.00,
+                'category' => 'Jackets',
+                'status' => 'active',
+                'statusLabel' => 'Active',
+                'rating' => '4.6',
+                'description' => 'Soft flannel shirt, perfect as an outer layer.',
+                'image' => '/images/sale4.jpg'
+            ],
+            [
+                'id' => 21,
+                'name' => 'Oversized Flannel Shirt',
+                'price' => 850.00,
+                'category' => 'Jackets',
+                'status' => 'active',
+                'statusLabel' => 'Active',
+                'rating' => '4.6',
+                'description' => 'Soft flannel shirt, perfect as an outer layer.',
+                'image' => '/images/sale5.jpg'
+            ],
+            [
+                'id' => 22,
+                'name' => 'Oversized Flannel Shirt',
+                'price' => 850.00,
+                'category' => 'Jackets',
+                'status' => 'active',
+                'statusLabel' => 'Active',
+                'rating' => '4.6',
+                'description' => 'Soft flannel shirt, perfect as an outer layer.',
+                'image' => '/images/sale6.jpg'
+            ],
+            [
+                'id' => 23,
+                'name' => 'Oversized Flannel Shirt',
+                'price' => 850.00,
+                'category' => 'Jackets',
+                'status' => 'active',
+                'statusLabel' => 'Active',
+                'rating' => '4.6',
+                'description' => 'Soft flannel shirt, perfect as an outer layer.',
+                'image' => '/images/sale7.jpg'
+            ],
+            [
+                'id' => 24,
+                'name' => 'Oversized Flannel Shirt',
+                'price' => 850.00,
+                'category' => 'Jackets',
+                'status' => 'active',
+                'statusLabel' => 'Active',
+                'rating' => '4.6',
+                'description' => 'Soft flannel shirt, perfect as an outer layer.',
+                'image' => '/images/more4.jpg'
+            ],
+            [
+                'id' => 25,
+                'name' => 'Oversized Flannel Shirt',
+                'price' => 850.00,
+                'category' => 'Jackets',
+                'status' => 'active',
+                'statusLabel' => 'Active',
+                'rating' => '4.6',
+                'description' => 'Soft flannel shirt, perfect as an outer layer.',
+                'image' => '/images/more4.jpg'
+            ],
+            [
+                'id' => 26,
+                'name' => 'Oversized Flannel Shirt',
+                'price' => 850.00,
+                'category' => 'Jackets',
+                'status' => 'active',
+                'statusLabel' => 'Active',
+                'rating' => '4.6',
+                'description' => 'Soft flannel shirt, perfect as an outer layer.',
+                'image' => '/images/more4.jpg'
+            ],
+            [
+                'id' => 27,
+                'name' => 'Oversized Flannel Shirt',
+                'price' => 850.00,
+                'category' => 'Jackets',
+                'status' => 'active',
+                'statusLabel' => 'Active',
+                'rating' => '4.6',
+                'description' => 'Soft flannel shirt, perfect as an outer layer.',
+                'image' => '/images/more4.jpg'
+            ],
+            [
+                'id' => 28,
                 'name' => 'Oversized Flannel Shirt',
                 'price' => 850.00,
                 'category' => 'Jackets',

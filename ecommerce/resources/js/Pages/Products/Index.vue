@@ -11,64 +11,48 @@
       <div class="mt-8 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
         <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <!-- Tabs Section -->
-          <div class="flex flex-wrap items-center gap-3">
-            <button
-              type="button"
-              :class="selectedTab === 'all' ? activeTabClass : tabClass"
-              @click="router.get(route('products.index'))"
+          <div class="relative inline-block text-left">
+            <div>
+              <button
+                @click="isDropdownOpen = !isDropdownOpen"
+                type="button"
+                class="inline-flex w-full justify-between items-center gap-x-2 rounded-full border border-slate-900 bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-slate-800 transition-all focus:outline-none"
+              >
+                <!-- Dinamiko na label base sa napili -->
+                Category: {{ categories.find(c => c.id === selectedTab)?.label || 'All' }}
+                <svg class="-mr-1 h-5 w-5 text-slate-300" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </div>
+
+            <!-- Dropdown Menu -->
+            <transition
+              enter-active-class="transition ease-out duration-100"
+              enter-from-class="transform opacity-0 scale-95"
+              enter-to-class="transform opacity-100 scale-100"
+              leave-active-class="transition ease-in duration-75"
+              leave-from-class="transform opacity-100 scale-100"
+              leave-to-class="transform opacity-0 scale-95"
             >
-              All
-            </button>
-            <button
-              type="button"
-              :class="selectedTab === 'polo' ? activeTabClass : tabClass"
-              @click="router.get(route('products.index', { category: 'polo' }))"
-            >
-              Polo
-            </button>
-            <button
-              type="button"
-              :class="selectedTab === 'tshirt' ? activeTabClass : tabClass"
-              @click="router.get(route('products.index', { category: 'tshirt' }))"
-            >
-              T-shirt
-            </button>
-            <button
-              type="button"
-              :class="selectedTab === 'hoodie' ? activeTabClass : tabClass"
-              @click="router.get(route('products.index', { category: 'hoodie' }))"
-            >
-              Hoodie
-            </button>
-            <button
-              type="button"
-              :class="selectedTab === 'shorts' ? activeTabClass : tabClass"
-              @click="router.get(route('products.index', { category: 'shorts' }))"
-            >
-              Shorts
-            </button>
-            <button
-              type="button"
-              :class="selectedTab === 'jackets' ? activeTabClass : tabClass"
-              @click="router.get(route('products.index', { category: 'jackets' }))"
-            >
-              Jackets
-            </button>
-            <button
-              type="button"
-              :class="selectedTab === 'pants' ? activeTabClass : tabClass"
-              @click="router.get(route('products.index', { category: 'pants' }))"
-            >
-              Pants
-            </button>
-            <button
-              type="button"
-              :class="selectedTab === 'accessories' ? activeTabClass : tabClass"
-              @click="router.get(route('products.index', { category: 'accessories' }))"
-            >
-              Accessories
-            </button>
-          </div>
+              <div
+                v-if="isDropdownOpen"
+                class="absolute left-0 z-50 mt-2 w-56 origin-top-left rounded-2xl bg-white shadow-xl ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden"
+              >
+              <div class="py-1">
+                <button
+                  v-for="category in categories"
+                  :key="category.id"
+                  @click="selectCategory(category.id)"
+                  class="block w-full text-left px-4 py-3 text-sm transition-colors hover:bg-slate-50"
+                  :class="selectedTab === category.id ? 'bg-slate-50 font-bold text-slate-900' : 'text-slate-600'"
+                >
+                  {{ category.label }}
+                </button>
+              </div>
+            </div>
+          </transition>
+        </div>
 
           <!-- Modern Search Bar Section -->
           <div class="relative w-full lg:w-80 group">
@@ -130,32 +114,10 @@
               <h2 class="mt-2 text-sm font-bold text-slate-900 line-clamp-1">{{ product.name }}</h2>
               <p class="mt-1 text-[11px] leading-4 text-slate-500 line-clamp-2">{{ product.description }}</p>
               
-              <!-- Price & Actions -->
-              <div class="mt-auto pt-3 flex items-center justify-between gap-2">
-                <div>
-                  <p class="text-sm font-black text-slate-900">₱{{ formatPrice(product.price) }}</p>
-                  <p class="text-[10px] text-yellow-500 font-bold">{{ product.rating }} ★</p>
-                </div>
-                
-                <div class="flex gap-1">
-                  <button
-                    type="button"
-                    class="inline-flex items-center justify-center rounded-xl bg-slate-900 px-3 py-1.5 text-[11px] font-bold text-white transition hover:bg-slate-700"
-                    @click.stop="handleBuy(product)"
-                  >
-                    Buy
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-slate-900 text-white transition hover:bg-slate-700"
-                    @click.stop="handleAddToCart(product)"
-                  >
-                    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                      <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                    </svg>
-                  </button>
-                </div>
+              <!-- Price & Rating -->
+              <div class="mt-auto pt-3">
+                <p class="text-sm font-black text-slate-900">₱{{ formatPrice(product.price) }}</p>
+                <p class="text-[10px] text-yellow-500 font-bold">{{ product.rating }} ★</p>
               </div>
             </div>
           </div>
@@ -186,19 +148,40 @@ const props = defineProps({
   }
 })
 
+// --- DITO MO ILALAGAY ANG MGA BAGONG REFS ---
+const isDropdownOpen = ref(false)
 const selectedTab = ref(props.selectedCategory || 'all')
 const searchQuery = ref('')
-const { addToCart } = useCart() 
+
+// Listahan para sa loop ng dropdown
+const categories = [
+  { id: 'all', label: 'All Products' },
+  { id: 'polo', label: 'Polo' },
+  { id: 'tshirt', label: 'T-shirt' },
+  { id: 'hoodie', label: 'Hoodie' },
+  { id: 'shorts', label: 'Shorts' },
+  { id: 'jackets', label: 'Jackets' },
+  { id: 'pants', label: 'Pants' },
+]
+
+// Function para sa pagpili sa dropdown
+const selectCategory = (categoryId) => {
+  selectedTab.value = categoryId;
+  isDropdownOpen.value = false;
+  
+  // Tatawag sa backend para sa filtering
+  if (categoryId === 'all') {
+    router.get(route('products.index'));
+  } else {
+    router.get(route('products.index', { category: categoryId }));
+  }
+}
+// ------------------------------------------
+
+const { addToCart } = useCart()
 
 const handleAddToCart = (product) => {
   addToCart(product);
-};
-
-const tabClass = 'rounded-full border border-slate-200 bg-white px-5 py-2 text-sm font-medium text-slate-600 transition hover:border-slate-300 hover:text-slate-900'
-const activeTabClass = 'rounded-full border border-slate-900 bg-slate-900 px-5 py-2 text-sm font-medium text-white transition'
-
-const handleBuy = (product) => {
-  handleAddToCart(product);
 };
 
 const goToProduct = (productId) => {

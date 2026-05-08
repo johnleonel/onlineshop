@@ -1,6 +1,6 @@
 <template>
   <div class="bg-gray-100 min-h-screen p-4 font-sans">
-    <div class="grid grid-cols-12 gap-4 max-w-7xl mx-auto">
+    <div class="grid grid-cols-12 gap-4 max-w-7xl mx-auto" :key="$page.url">
       
       <!-- Hero Section -->
       <div class="col-span-12 md:col-span-8 bg-white rounded-[40px] shadow-2xl p-10 relative overflow-hidden flex flex-col justify-between min-h-[500px]">
