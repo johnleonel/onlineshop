@@ -89,58 +89,11 @@
 
         <!-- Grid Section -->
         <div class="mt-8 grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          <div
+          <ProductCard
             v-for="product in filteredProducts"
             :key="product.id"
-            class="flex flex-col overflow-hidden rounded-[1.5rem] border border-slate-200 bg-slate-50 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md cursor-pointer"
-            @click="goToProduct(product.id)"
-          >
-            <!-- Image Container -->
-            <div class="aspect-square w-full overflow-hidden bg-white p-3">
-              <img
-                :src="resolveImage(product.image)"
-                :alt="product.name"
-                class="h-full w-full object-contain transition duration-500 hover:scale-105"
-              />
-            </div>
-
-            <!-- Content Section -->
-            <div class="p-3 flex flex-col flex-grow">
-              <div class="flex items-center justify-between gap-2 text-[10px] uppercase tracking-wider text-slate-500 font-bold">
-                <span>{{ product.category }}</span>
-                <span class="rounded-full bg-white px-2 py-0.5 text-green-600 border border-slate-100">{{ product.statusLabel }}</span>
-              </div>
-
-              <h2 class="mt-2 text-sm font-bold text-slate-900 line-clamp-1">{{ product.name }}</h2>
-              <p class="mt-1 text-[11px] leading-4 text-slate-500 line-clamp-2">{{ product.description }}</p>
-              
-              <!-- Price & Rating & Add to Cart -->
-              <div class="mt-auto pt-3 flex items-center justify-between gap-2">
-                <div>
-                  <p class="text-sm font-black text-slate-900">₱{{ formatPrice(product.price) }}</p>
-                  <p class="text-[10px] text-yellow-500 font-bold">{{ product.rating }} ★</p>
-                </div>
-                <button
-                  @click="handleAddToCart($event, product)"
-                  class="flex-shrink-0 rounded-full bg-black p-2 text-white shadow-md transition hover:bg-slate-800 hover:scale-105 active:scale-95"
-                  title="Add to Cart"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                  </svg>
-                </button>
-                <button
-                  @click="handleBuyNow($event, product)"
-                  class="flex-shrink-0 rounded-full bg-slate-900 p-2 text-white shadow-md transition hover:bg-slate-700 hover:scale-105 active:scale-95"
-                  title="Buy Now"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 3.75a.75.75 0 01.75.75v3.5h3.5a.75.75 0 010 1.5h-3.5v3.5a.75.75 0 01-1.5 0v-3.5h-3.5a.75.75 0 010-1.5h3.5v-3.5A.75.75 0 0110 3.75z" clip-rule="evenodd" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
+            :product="product"
+          />
         </div>
 
         <div v-if="filteredProducts.length === 0" class="mt-8 rounded-3xl border border-dashed border-slate-200 bg-slate-50 p-8 text-center text-slate-500">
@@ -173,10 +126,12 @@
 
 <script setup>
 import AppLayout from '@/Layouts/Applayout.vue'
-import { Head, router } from '@inertiajs/vue3'
+import { Head, router, usePage } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
-import useCart from '@/composables/useCart'
-import { resolveImage } from '@/utils/imageHelper'
+import ProductCard from '@/Components/ProductCard.vue'
+
+const page = usePage()
+const isAuthenticated = computed(() => !!page.props.auth?.user)
 
 const props = defineProps({
   products: {
@@ -219,21 +174,9 @@ const selectCategory = (categoryId) => {
 }
 // ------------------------------------------
 
-const { addToCart, setBuyNowItem } = useCart()
+const toastVisible = ref(false)
+const addedToastName = ref('')
 
-const handleAddToCart = (e, product) => {
-  e.stopPropagation()
-  addToCart(product)
-  showAddedToast(product.name)
-}
-
-const handleBuyNow = (e, product) => {
-  e.stopPropagation()
-  setBuyNowItem(product, 1, null, null)
-  router.visit('/checkout')
-}
-
-// Toast notification
 const showAddedToast = (productName) => {
   addedToastName.value = productName
   toastVisible.value = true
@@ -241,12 +184,6 @@ const showAddedToast = (productName) => {
     toastVisible.value = false
   }, 2500)
 }
-const toastVisible = ref(false)
-const addedToastName = ref('')
-
-const goToProduct = (productId) => {
-  router.get(`/products/${productId}`);
-};
 
 const filteredProducts = computed(() => {
   let results = props.products;

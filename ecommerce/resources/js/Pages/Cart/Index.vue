@@ -158,12 +158,26 @@
 <script setup>
 import AppLayout from '@/Layouts/Applayout.vue'
 import { Head, Link, router, usePage } from '@inertiajs/vue3'
-import { computed } from 'vue'
+import { computed, watch, onMounted } from 'vue'
 import useCart from '@/composables/useCart'
 import useAuthModal from '@/composables/useAuthModal'
 import { resolveImage } from '@/utils/imageHelper'
 
-const { items, updateQuantity, removeFromCart, clearCart, selectedIds, toggleSelectedId, selectAllIds, deselectAllIds, setCheckoutSource, itemKey, removeSelectedByItemKey } = useCart()
+const { items, updateQuantity, removeFromCart, clearCart, selectedIds, toggleSelectedId, selectAllIds, deselectAllIds, setCheckoutSource, itemKey, removeSelectedByItemKey, syncItemsFromServer } = useCart()
+
+onMounted(() => {
+  console.log('[Cart/Index] mounted, syncing from server...')
+  syncItemsFromServer().then(() => {
+    console.log('[Cart/Index] sync complete, items:', JSON.parse(JSON.stringify(items.value)))
+  })
+})
+
+// Debug: log items whenever they change
+watch(items, (newItems) => {
+  console.log('[Cart/Index] items changed:', JSON.parse(JSON.stringify(newItems)))
+}, { deep: true })
+
+console.log('[Cart/Index] mounted, current items:', JSON.parse(JSON.stringify(items.value)))
 const { openAuthModal } = useAuthModal()
 const page = usePage()
 const isAuthenticated = computed(() => !!page.props.auth?.user)

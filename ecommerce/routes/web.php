@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\DealsController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\NewDropsController;
 use Illuminate\Foundation\Application;
@@ -19,9 +18,8 @@ Route::get('/products/{product}', [ProductController::class, 'show'])->name('pro
 // New Drops page - NEW NAVIGATION ROUTE
 Route::get('/new-drops', [NewDropsController::class, 'index'])->name('new-drops.index');
 
-// Deals routes
-Route::get('/deals', [DealsController::class, 'index'])->name('deals.index');
-Route::get('/deals/{product}', [DealsController::class, 'show'])->name('deals.show');
+// Deals page – uses the unified products index filtered by discount
+Route::get('/deals', [ProductController::class, 'index'])->name('deals.index');
 
 // Cart routes (authenticated)
 Route::middleware(['auth'])->group(function () {
@@ -31,6 +29,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/cart/{cartItem}', [CartController::class, 'destroy'])->name('cart.destroy');
     Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
     Route::get('/cart/count', [CartController::class, 'count'])->name('cart.count');
+    Route::get('/cart/items', [CartController::class, 'items'])->name('cart.items');
     Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
     Route::post('/checkout', [CartController::class, 'processCheckout'])->name('checkout.process');
 });

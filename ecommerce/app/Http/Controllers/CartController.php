@@ -147,6 +147,32 @@ class CartController extends Controller
     }
 
     /**
+     * Return full cart items as JSON so the client-side composable can sync.
+     * Used by syncItemsFromServer() after every cart mutation.
+     */
+    public function items(): JsonResponse
+    {
+        $cartItems = CartItem::with('product')
+            ->where('user_id', Auth::id())
+            ->get();
+
+        $items = $cartItems->map(fn ($ci) => [
+            'id'       => $ci->id,
+            'product_id' => $ci->product_id,
+            'name'     => $ci->product->name ?? 'Unknown',
+            'price'    => (float) ($ci->product->sale_price ?? $ci->product->price ?? 0),
+            'originalPrice' => $ci->product->original_price ? (float) $ci->product->original_price : null,
+            'image'    => $ci->product->image ?? '',
+            'category' => $ci->product->category ?? '',
+            'quantity' => $ci->quantity,
+            'size'     => $ci->size,
+            'color'    => $ci->color,
+        ])->toArray();
+
+        return response()->json(['items' => $items]);
+    }
+
+    /**
      * Checkout page — differentiated by source:
      * - 'direct_buy': isolated single Buy Now item (no cart merge)
      * - 'cart_checkout': selective items from cart only

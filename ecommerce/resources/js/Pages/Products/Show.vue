@@ -1,10 +1,114 @@
+<script setup>
+import AppLayout from '@/Layouts/Applayout.vue'
+import { Head, Link, router, usePage } from '@inertiajs/vue3'
+import { ref, computed } from 'vue'
+import useCart from '@/composables/useCart'
+import useAuthModal from '@/composables/useAuthModal'
+import { resolveImage } from '@/utils/imageHelper'
+
+const props = defineProps({
+  product: {
+    type: Object,
+    required: true,
+  },
+  relatedProducts: {
+    type: Array,
+    default: () => []
+  },
+})
+
+const { addToCart, setBuyNowItem } = useCart()
+const { openAuthModal } = useAuthModal()
+const page = usePage()
+const quantity = ref(1)
+
+// Check if user is authenticated
+const isAuthenticated = computed(() => !!page.props.auth?.user)
+
+// UI State
+const selectedColor = ref('53 Green')
+const selectedSize = ref('S')
+const selectedTab = ref('')
+
+// ── Unified sale detection ──────────────────────────────────
+// A product is a "sale" item when it has an originalPrice set and > current price
+const isSaleItem = computed(() =>
+  props.product.originalPrice && props.product.originalPrice > props.product.price
+)
+
+const saleDiscount = computed(() =>
+  isSaleItem.value
+    ? Math.round(((props.product.originalPrice - props.product.price) / props.product.originalPrice) * 100)
+    : 0
+)
+
+// Data
+const colors = [
+  { name: '53 Green', code: '#8AA491' },
+  { name: '12 Peach', code: '#E0C7B0' },
+  { name: '88 Gray', code: '#D9D9D9' },
+]
+const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
+const tabs = ['Details', 'Reviews', 'Discussion']
+
+// Computed Properties
+const thumbnailImages = computed(() => [
+  resolveImage(props.product.image),
+  resolveImage(props.product.image),
+  resolveImage(props.product.image),
+  resolveImage(props.product.image),
+])
+const moreThumbnails = 4
+
+const originalPrice = computed(() => props.product.originalPrice || props.product.price + 34)
+
+const ratingBars = [
+  { label: '5', count: 184, width: '75%' },
+  { label: '4', count: 63, width: '45%' },
+  { label: '3', count: 29, width: '25%' },
+  { label: '2', count: 7, width: '12%' },
+  { label: '1', count: 2, width: '5%' },
+]
+
+// Methods
+const formatPrice = (price) => parseFloat(price).toFixed(2)
+
+const handleAddToCart = () => {
+  addToCart(props.product, quantity.value, selectedSize.value, selectedColor.value)
+  showAddedToast(props.product.name)
+}
+
+const handleBuyNow = () => {
+  if (!selectedSize.value) {
+    alert('Please select a size before proceeding.')
+    return
+  }
+  if (!isAuthenticated.value) {
+    openAuthModal('/checkout?source=direct_buy')
+    return
+  }
+  setBuyNowItem(props.product, quantity.value, selectedSize.value, selectedColor.value)
+  router.visit('/checkout?source=direct_buy')
+}
+
+const showAddedToast = (productName) => {
+  addedToastName.value = productName
+  toastVisible.value = true
+  setTimeout(() => {
+    toastVisible.value = false
+  }, 2500)
+}
+
+const toastVisible = ref(false)
+const addedToastName = ref('')
+</script>
+
 <template>
   <AppLayout>
     <Head :title="product.name" />
 
-    <!-- Binabaan ang max-width para mas "compact" ang tingin sa screen -->
     <div class="max-w-6xl mx-auto px-4 py-8">
-      
+
       <!-- Breadcrumbs -->
       <div class="mb-6 flex items-center gap-3 text-xs text-slate-500">
         <Link href="/products" class="hover:text-slate-900 font-medium">Products</Link>
@@ -14,7 +118,7 @@
 
       <!-- Main Product Grid -->
       <div class="grid gap-8 lg:grid-cols-2 items-start">
-        
+
         <!-- LEFT: Image Section -->
         <section>
           <div class="rounded-[2rem] bg-white p-4 shadow-sm border border-slate-100">
@@ -43,7 +147,17 @@
             <div>
               <p class="text-[10px] uppercase tracking-[0.3em] text-slate-400">Classic Collection</p>
               <h1 class="mt-2 text-2xl font-bold text-slate-900">{{ product.name }}</h1>
-              
+
+              <!-- Sale Badge – shown only for discounted products -->
+              <div v-if="isSaleItem" class="mt-2 flex items-center gap-2">
+                <span class="inline-flex items-center gap-1 bg-red-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                  <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clip-rule="evenodd" />
+                  </svg>
+                  Sale – {{ saleDiscount }}% Off
+                </span>
+              </div>
+
               <div class="mt-3 flex items-center gap-3 text-xs">
                 <span class="bg-slate-100 px-2 py-1 rounded-md font-semibold">5K+ Sold</span>
                 <span class="text-amber-500 font-bold">★ 4.9</span>
@@ -51,9 +165,13 @@
               </div>
             </div>
 
+            <!-- Price Section – unified: shows strikethrough only for sale items -->
             <div class="mt-6 flex items-baseline gap-3">
               <span class="text-3xl font-black text-slate-900">₱{{ formatPrice(product.price) }}</span>
-              <span class="text-sm text-slate-400 line-through">₱{{ formatPrice(originalPrice) }}</span>
+              <template v-if="isSaleItem">
+                <span class="text-sm text-slate-400 line-through">₱{{ formatPrice(originalPrice) }}</span>
+                <span class="text-sm font-bold text-red-500">-{{ saleDiscount }}%</span>
+              </template>
             </div>
 
             <!-- Selectors -->
@@ -78,7 +196,7 @@
                     v-for="size in sizes"
                     :key="size"
                     @click="selectedSize = size"
-                    :class="['h-10 w-12 rounded-xl border text-xs font-bold transition', 
+                    :class="['h-10 w-12 rounded-xl border text-xs font-bold transition',
                       selectedSize === size ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400']"
                   >
                     {{ size }}
@@ -100,11 +218,11 @@
 
           <!-- Tab Toggles (Dito pipindutin para lumabas ang review) -->
           <div class="flex gap-2">
-            <button 
-              v-for="tab in tabs" 
+            <button
+              v-for="tab in tabs"
               :key="tab"
               @click="selectedTab = (selectedTab === tab ? '' : tab)"
-              :class="['px-5 py-2 rounded-full text-xs font-bold transition', 
+              :class="['px-5 py-2 rounded-full text-xs font-bold transition',
                 selectedTab === tab ? 'bg-slate-900 text-white' : 'bg-white text-slate-500 border border-slate-200']"
             >
               {{ tab }}
@@ -117,7 +235,7 @@
       <transition name="fade">
         <div v-if="selectedTab === 'Reviews'" class="mt-8 rounded-[2rem] bg-white p-8 shadow-sm border border-slate-100">
           <h3 class="text-xl font-bold mb-6">Customer Reviews</h3>
-          
+
           <div class="grid gap-8 lg:grid-cols-[250px_1fr]">
             <!-- Rating Stats -->
             <div class="space-y-3">
@@ -146,7 +264,7 @@
           </div>
         </div>
       </transition>
-      
+
       <div v-if="selectedTab === 'Details'" class="mt-8 rounded-[2rem] bg-white p-8 shadow-sm border border-slate-100">
          <p class="text-slate-600">Detailed product specifications and material info here...</p>
       </div>
@@ -173,94 +291,3 @@
     </Transition>
   </AppLayout>
 </template>
-
-<script setup>
-import AppLayout from '@/Layouts/Applayout.vue'
-import { Head, Link, router, usePage } from '@inertiajs/vue3'
-import { ref, computed } from 'vue'
-import useCart from '@/composables/useCart'
-import useAuthModal from '@/composables/useAuthModal'
-import { resolveImage } from '@/utils/imageHelper'
-
-const props = defineProps({
-  product: {
-    type: Object,
-    required: true,
-  },
-})
-
-// Logic para sa Cart
-const { addToCart, setBuyNowItem } = useCart()
-const { openAuthModal } = useAuthModal()
-const page = usePage()
-const quantity = ref(1)
-
-// Check if user is authenticated
-const isAuthenticated = computed(() => !!page.props.auth?.user)
-
-// UI State
-const selectedColor = ref('53 Green')
-const selectedSize = ref('S')
-const selectedTab = ref('') // Naka-empty para nakatago ang reviews sa simula
-
-// Data
-const colors = [
-  { name: '53 Green', code: '#8AA491' },
-  { name: '12 Peach', code: '#E0C7B0' },
-  { name: '88 Gray', code: '#D9D9D9' },
-]
-const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
-const tabs = ['Details', 'Reviews', 'Discussion']
-
-// Computed Properties
-const thumbnailImages = computed(() => [
-  resolveImage(props.product.image),
-  resolveImage(props.product.image),
-  resolveImage(props.product.image),
-  resolveImage(props.product.image),
-])
-const moreThumbnails = 4
-
-const originalPrice = computed(() => props.product.price + 34)
-
-const ratingBars = [
-  { label: '5', count: 184, width: '75%' },
-  { label: '4', count: 63, width: '45%' },
-  { label: '3', count: 29, width: '25%' },
-  { label: '2', count: 7, width: '12%' },
-  { label: '1', count: 2, width: '5%' },
-]
-
-// Methods
-const formatPrice = (price) => parseFloat(price).toFixed(2)
-
-const handleAddToCart = () => {
-  addToCart(props.product, quantity.value, selectedSize.value, selectedColor.value)
-  showAddedToast(props.product.name)
-}
-
-const handleBuyNow = () => {
-  if (!selectedSize.value) {
-    alert('Please select a size before proceeding.')
-    return
-  }
-  // If guest, show login modal instead of redirecting
-  if (!isAuthenticated.value) {
-    openAuthModal('/checkout?source=direct_buy')
-    return
-  }
-  setBuyNowItem(props.product, quantity.value, selectedSize.value, selectedColor.value)
-  router.visit('/checkout?source=direct_buy')
-}
-
-const showAddedToast = (productName) => {
-  addedToastName.value = productName
-  toastVisible.value = true
-  setTimeout(() => {
-    toastVisible.value = false
-  }, 2500)
-}
-
-const toastVisible = ref(false)
-const addedToastName = ref('')
-</script>

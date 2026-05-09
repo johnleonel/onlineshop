@@ -1,21 +1,13 @@
 <script setup>
 import { Link, router } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import { resolveImage } from '@/utils/imageHelper';
+import ProductCard from '@/Components/ProductCard.vue';
 
-// Products passed from the backend (HomeController/Dashboard)
 const props = defineProps({
   products: {
     type: Array,
     default: () => []
   }
-});
-
-const formatPrice = (value) => value.toFixed(2);
-
-const saleItems = computed(() => {
-  // If products are passed, use them; otherwise fall back to empty (no hardcoded items)
-  return props.products.length > 0 ? props.products : [];
 });
 
 const goToProduct = (productId) => {
@@ -36,30 +28,16 @@ const goToProduct = (productId) => {
         </Link>
       </div>
 
-      <div v-if="saleItems.length === 0" class="text-center text-slate-400 py-12">
+      <div v-if="products.length === 0" class="text-center text-slate-400 py-12">
         No sale items available.
       </div>
 
       <div v-else class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-6">
-        <div
-          v-for="item in saleItems"
+        <ProductCard
+          v-for="item in products"
           :key="item.id"
-          @click="goToProduct(item.id)"
-          class="group block overflow-hidden rounded-3xl bg-white p-4 text-center transition hover:-translate-y-1 hover:shadow-xl cursor-pointer"
-        >
-          <div class="aspect-square overflow-hidden rounded-3xl bg-white p-4">
-            <img
-              :src="resolveImage(item.image)"
-              :alt="item.name"
-              class="h-full w-full object-contain transition duration-300 group-hover:scale-105"
-              loading="lazy"
-            />
-          </div>
-          <div class="mt-4">
-            <p class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-900">{{ item.name }}</p>
-            <p class="mt-1 text-sm font-bold text-slate-900">₱{{ formatPrice(item.price) }}</p>
-          </div>
-        </div>
+          :product="item"
+        />
       </div>
     </div>
   </section>

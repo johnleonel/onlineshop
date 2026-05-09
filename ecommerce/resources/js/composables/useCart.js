@@ -142,6 +142,39 @@ const saveCart = () => {
 };
 
 /**
+ * Sync server-side cart items into the local items ref.
+ * Called after mutating actions so the header drawer stays in sync.
+ */
+const syncItemsFromServer = async () => {
+  if (typeof window === 'undefined') return;
+  try {
+    const { data } = await axios.get('/cart/items')
+    if (Array.isArray(data.items)) {
+      items.value = data.items
+      cartCount.value = data.items.reduce((sum, item) => sum + (item.quantity || 0), 0)
+      saveCart()
+    }
+  } catch (e) { /* ignore */ }
+};
+
+/**
+ * Load cart from server for authenticated users, or from localStorage for guests.
+ * Call this once on app boot.
+ */
+const initCart = async () => {
+  if (typeof window === 'undefined') return;
+  try {
+    // If server call fails (guest user → 401), fall back to localStorage
+    await syncItemsFromServer()
+  } catch (e) {
+    const stored = loadCart()
+    items.value = stored.items || []
+    cartCount.value = stored.count || 0
+    console.log('[useCart] initCart fell back to localStorage, items:', JSON.parse(JSON.stringify(items.value)))
+  }
+};
+
+/**
  * Sync server-side cart count (for authenticated users on page load).
  */
 const syncWithBackend = async () => {
@@ -159,6 +192,9 @@ const syncWithBackend = async () => {
  * Falls back to local state when the backend is unavailable (guest users).
  */
 const addToCart = async (product, quantity = 1, size = null, color = null) => {
+  console.log('[useCart] addToCart called with:', { product, quantity, size, color })
+  console.log('[useCart] current items before add:', JSON.parse(JSON.stringify(items.value)))
+
   // Try backend first (authenticated)
   try {
     const { data } = await axios.post('/cart', {
@@ -166,34 +202,41 @@ const addToCart = async (product, quantity = 1, size = null, color = null) => {
       quantity,
       size,
       color,
-    });
+    })
     if (data.success) {
-      cartCount.value = data.cart_count;
-      saveCart();
-      return { success: true, message: data.message };
+      cartCount.value = data.cart_count
+      await syncItemsFromServer()
+      console.log('[useCart] backend success, synced items:', JSON.parse(JSON.stringify(items.value)))
+      return { success: true, message: data.message }
     }
   } catch (e) {
     /* fallback to local state */
   }
 
   // Local fallback (guest / unauthenticated)
+  const itemKeyStr = `${product.id}__${size || ''}__${color || ''}`
   const existing = items.value.find(
     (item) => item.id === product.id && item.size === size && item.color === color
-  );
+  )
   if (existing) {
-    existing.quantity += quantity;
+    existing.quantity += quantity
+    console.log('[useCart] item exists, new qty:', existing.quantity)
   } else {
-    items.value.push({ ...product, quantity, size, color });
+    items.value.push({ ...product, quantity, size, color })
+    console.log('[useCart] new item pushed, total items:', items.value.length)
   }
-  cartCount.value += quantity;
-  saveCart();
-  return { success: true, message: 'Product added to cart' };
+  cartCount.value += quantity
+  saveCart()
+  console.log('[useCart] after add – items:', JSON.parse(JSON.stringify(items.value)), 'count:', cartCount.value)
+  return { success: true, message: 'Product added to cart' }
 };
 
 /**
  * Clear entire cart.
  */
 const clearCart = () => {
+  // Try backend first (authenticated)
+  axios.delete('/cart').catch(() => {})
   items.value     = [];
   cartCount.value = 0;
   saveCart();
@@ -219,6 +262,9 @@ const updateQuantity = async (productId, quantity, size = null, color = null) =>
   // Try backend first
   try {
     await axios.patch(`/cart/${existing.id || productId}`, { quantity });
+    // Sync full cart so drawer + Cart/Index stay in sync
+    await syncItemsFromServer()
+    return
   } catch (e) {
     /* fallback to local state */
   }
@@ -240,6 +286,9 @@ const removeFromCart = async (productId, size = null, color = null) => {
   // Try backend first
   try {
     await axios.delete(`/cart/${productId}`);
+    // Sync full cart so drawer + Cart/Index stay in sync
+    await syncItemsFromServer()
+    return
   } catch (e) {
     /* fallback to local state */
   }
@@ -277,6 +326,8 @@ export default function useCart() {
     removeFromCart,
     clearCart,
     syncWithBackend,
+    initCart,
+    syncItemsFromServer,
     buyNowItem,
     setBuyNowItem,
     clearBuyNowItem,

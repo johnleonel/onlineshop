@@ -1,6 +1,14 @@
 <script setup>
 import Header from '@/Components/Header.vue'
 import AuthModal from '@/Components/AuthModal.vue'
+import { onMounted } from 'vue'
+import useCart from '@/composables/useCart'
+
+const { initCart } = useCart()
+
+onMounted(() => {
+  initCart()
+})
 </script>
 
 <template>

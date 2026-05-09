@@ -83,7 +83,7 @@ const handleCheckoutClick = () => {
                     <div class="relative">
                         <Link :href="route('new-drops.index')" class="text-red-500 hover:text-red-600 font-bold italic">New Drops</Link>
                     </div>
-                    <Link href="/deals" class="text-red-500 hover:text-red-600 font-bold italic">Deals</Link>
+                    <Link href="/about" class="hover:text-black transition">About Us</Link>
                     <Link href="/about" class="hover:text-black transition">About Us</Link>
                 </div>
 
@@ -233,7 +233,6 @@ const handleCheckoutClick = () => {
             <Link href="/" class="block text-gray-600">Home</Link>
             <Link href="/products" class="block text-gray-600">Products</Link>
             <Link :href="route('new-drops.index')" class="block text-red-500 font-bold italic">New Drops</Link>
-            <Link href="/deals" class="block text-red-500 font-bold font-italic">Deals</Link>
         </div>
     </nav>
 </template>

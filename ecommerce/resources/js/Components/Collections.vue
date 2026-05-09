@@ -1,8 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
+import ProductCard from '@/Components/ProductCard.vue'
 import useCart from '@/composables/useCart'
-import { resolveImage } from '@/utils/imageHelper'
 
 const { addToCart } = useCart()
 
@@ -22,20 +22,9 @@ const selectCollection = (index) => {
   activeCollectionIndex.value = index
 }
 
-const formatPrice = (price) => price.toFixed(2)
-
 const goToProducts = () => {
   router.visit('/products')
 }
-
-const goToProduct = (productId) => {
-  router.visit('/products/' + productId)
-}
-
-const handleAddToCart = (product) => {
-  addToCart(product)
-}
-
 </script>
 
 <template>
@@ -68,35 +57,11 @@ const handleAddToCart = (product) => {
       </div>
 
       <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div
+        <ProductCard
           v-for="item in activeCollectionItems"
           :key="item.id"
-          class="group cursor-pointer"
-          @click="goToProduct(item.id)"
-        >
-          <div class="relative overflow-hidden rounded-lg bg-gray-100 mb-4 aspect-square">
-            <img
-              :src="resolveImage(item.image)"
-              :alt="item.name"
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            />
-            <div
-              v-if="item.discount"
-              class="absolute top-3 right-3 bg-red-500 text-white rounded-full px-3 py-1 text-xs font-bold"
-            >
-              -{{ item.discount }}%
-            </div>
-          </div>
-
-          <div class="text-center">
-            <h3 class="text-sm md:text-base font-semibold text-gray-900 mb-2 line-clamp-2">
-              {{ item.name }}
-            </h3>
-            <p class="text-base md:text-lg font-bold text-gray-900">
-              ₱{{ formatPrice(item.price) }}
-            </p>
-          </div>
-        </div>
+          :product="item"
+        />
       </div>
 
       <div class="mt-16 flex justify-center">

@@ -21,13 +21,20 @@ class ProductController extends Controller
             $image = '/images/' . $image;
         }
 
+        $hasDiscount = $p->hasDiscount();
+
         return [
-            'id'       => $p->id,
-            'name'     => $p->name,
-            'price'    => (float) $p->price,
-            'image'    => $image,
-            'category' => $p->category,
-            'discount' => $p->hasDiscount() ? $p->getDiscountPercentAttribute() : null,
+            'id'            => $p->id,
+            'name'          => $p->name,
+            'price'         => (float) $p->price,
+            'sale_price'    => $hasDiscount ? (float) $p->price : null,
+            'originalPrice' => $hasDiscount ? (float) $p->original_price : null,
+            'image'         => $image,
+            'category'      => $p->category,
+            'description'   => $p->description ?? '',
+            'rating'        => $p->rating ?? '4.5',
+            'discount'      => $hasDiscount ? $p->getDiscountPercentAttribute() : null,
+            'statusLabel'   => $hasDiscount ? 'SALE' : null,
         ];
     }
 

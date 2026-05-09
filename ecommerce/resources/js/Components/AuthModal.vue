@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue'
-import { router, usePage } from '@inertiajs/vue3'
+import { Link, router, usePage } from '@inertiajs/vue3'
 import useAuthModal from '@/composables/useAuthModal'
 
 const { showAuthModal, pendingRedirect, closeAuthModal } = useAuthModal()
