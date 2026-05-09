@@ -2,9 +2,6 @@
 import { ref, computed } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
 import ProductCard from '@/Components/ProductCard.vue'
-import useCart from '@/composables/useCart'
-
-const { addToCart } = useCart()
 
 const props = defineProps({
   collections: {

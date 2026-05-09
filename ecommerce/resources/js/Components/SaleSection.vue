@@ -1,18 +1,13 @@
 <script setup>
-import { Link, router } from '@inertiajs/vue3';
-import { computed } from 'vue';
-import ProductCard from '@/Components/ProductCard.vue';
+import { Link } from '@inertiajs/vue3'
+import ProductCard from '@/Components/ProductCard.vue'
 
 const props = defineProps({
   products: {
     type: Array,
     default: () => []
   }
-});
-
-const goToProduct = (productId) => {
-  router.visit('/products/' + productId);
-};
+})
 </script>
 
 <template>

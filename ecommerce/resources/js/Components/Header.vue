@@ -84,7 +84,6 @@ const handleCheckoutClick = () => {
                         <Link :href="route('new-drops.index')" class="text-red-500 hover:text-red-600 font-bold italic">New Drops</Link>
                     </div>
                     <Link href="/about" class="hover:text-black transition">About Us</Link>
-                    <Link href="/about" class="hover:text-black transition">About Us</Link>
                 </div>
 
                 <div class="flex-shrink-0 flex items-center">
