@@ -93,8 +93,11 @@
           </div>
         </div>
 
-             <!-- New drop -->       
-          <div class="relative overflow-hidden bg-white shadow-lg rounded-3xl group cursor-pointer h-72 flex items-center transition-colors duration-500">
+             <!-- New drop — entire container is clickable, navigates to New Drops page -->
+            <div
+              @click="goToNewDrops"
+              class="relative overflow-hidden bg-white shadow-lg rounded-3xl group cursor-pointer h-72 flex items-center transition-all duration-500 hover:shadow-2xl hover:scale-[1.01]"
+            >
             
             <div class="flex w-full overflow-hidden px-5">
               <div class="flex gap-1 animate-scroll group-hover:[animation-play-state:paused]">
@@ -155,7 +158,10 @@
                   <h4 class="text-[10px] font-black uppercase text-gray-900 leading-tight">All Products 50% Off</h4>
                 </div>
                 
-                <button class="w-full bg-black text-white py-3 rounded-xl font-bold text-[10px] uppercase flex items-center justify-center gap-2 transition-all hover:bg-zinc-800 active:scale-[0.98] group">
+                <button
+                  @click.stop="goToProducts"
+                  class="w-full bg-black text-white py-3 rounded-xl font-bold text-[10px] uppercase flex items-center justify-center gap-2 transition-all hover:bg-zinc-800 active:scale-[0.98] group cursor-pointer"
+                >
                   Shop Now
                   <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-hover:translate-x-1">
                     <path d="M9 18l6-6-6-6"/>
@@ -169,7 +175,7 @@
   </template>
 
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 import { ref, onMounted, onUnmounted } from 'vue';
 
 const props = defineProps({
@@ -214,6 +220,14 @@ onMounted(() => {
 onUnmounted(() => {
   if (timer) clearInterval(timer);
 });
+
+const goToNewDrops = () => {
+  router.visit(route('new-drops.index'))
+}
+
+const goToProducts = () => {
+  router.visit('/products')
+}
 </script>
 
 <style scoped>
