@@ -1,5 +1,6 @@
 <script setup>
-import Header from '@/Components/Header.vue';
+import Header from '@/Components/Header.vue'
+import AuthModal from '@/Components/AuthModal.vue'
 </script>
 
 <template>
@@ -16,5 +17,8 @@ import Header from '@/Components/Header.vue';
         <footer class="bg-white border-t border-gray-200 py-8 text-center text-gray-500 text-sm">
             &copy; 2026 CHILLEROX. All rights reserved.
         </footer>
+
+        <!-- Global Login Required Modal -->
+        <AuthModal />
     </div>
 </template>

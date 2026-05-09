@@ -1,8 +1,10 @@
 <script setup>
 import { ref, computed } from 'vue';
-import { Link, router } from '@inertiajs/vue3';
+import { Link, router, usePage } from '@inertiajs/vue3';
 import { ShoppingCartIcon, UserIcon, MagnifyingGlassIcon, Bars3Icon, MinusIcon, PlusIcon, TrashIcon } from '@heroicons/vue/24/outline';
 import useCart from '@/composables/useCart';
+import useAuthModal from '@/composables/useAuthModal';
+import { resolveImage } from '@/utils/imageHelper';
 
 const searchQuery = ref('');
 const isMobileMenuOpen = ref(false);
@@ -12,13 +14,16 @@ const isCartOpen = ref(false);
 let productsDropdownCloseTimeout = null;
 
 const { cartCount, items, updateQuantity, removeFromCart } = useCart();
+const { openAuthModal } = useAuthModal();
+const page = usePage();
+const isAuthenticated = computed(() => !!page.props.auth?.user);
 
 const cartSubtotal = computed(() => items.value.reduce((sum, item) => sum + item.price * item.quantity, 0));
 const shippingFee = computed(() => (items.value.length ? 34 : 0));
 const cartTotal = computed(() => cartSubtotal.value + shippingFee.value);
 
 const formatCurrency = (value) => {
-  return `Rp${Number(value || 0).toLocaleString('id-ID')}`;
+  return `₱${Number(value || 0).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 };
 
 const handleSearch = () => {
@@ -41,6 +46,14 @@ const closeProductsDropdown = () => {
 
 const handleLogout = () => {
     router.post('/logout');
+};
+
+const handleCheckoutClick = () => {
+    if (!isAuthenticated.value) {
+        openAuthModal('/checkout')
+    } else {
+        router.visit('/checkout')
+    }
 };
 </script>
 
@@ -66,6 +79,9 @@ const handleLogout = () => {
                             <Link :href="route('products.index', { category: 'hoodie' })" class="block rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-slate-100">Hoodie</Link>
                             <Link :href="route('products.index', { category: 'shorts' })" class="block rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-slate-100">Shorts</Link>
                         </div>
+                    </div>
+                    <div class="relative">
+                        <Link :href="route('new-drops.index')" class="text-red-500 hover:text-red-600 font-bold italic">New Drops</Link>
                     </div>
                     <Link href="/deals" class="text-red-500 hover:text-red-600 font-bold italic">Deals</Link>
                     <Link href="/about" class="hover:text-black transition">About Us</Link>
@@ -118,7 +134,7 @@ const handleLogout = () => {
                                 <div class="flex-1 overflow-y-auto p-4 space-y-4">
                                     <div v-if="items.length" class="space-y-4">
                                         <div v-for="item in items" :key="item.id" class="grid gap-3 rounded-3xl border border-slate-200 p-3 sm:grid-cols-[90px_1fr]">
-                                            <img :src="item.image" :alt="item.name" class="h-24 w-24 rounded-3xl object-cover" />
+                                            <img :src="resolveImage(item.image) || 'data:image/svg+xml,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width%3D%2290%22 height%3D%2290%22 viewBox%3D%220 0 90 90%22%3E%3Crect width%3D%2290%22 height%3D%2290%22 fill%3D%22%23e5e7eb%22%2F%3E%3Ctext x%3D%2245%22 y%3D%2250%22 font-family%3D%22sans-serif%22 font-size%3D%2212%22 font-weight%3D%22bold%22 fill%3D%22%236b7280%22 text-anchor%3D%22middle%22%3E%3C%2Ftext%3E%3C%2Fsvg%3E'" :alt="item.name" class="h-24 w-24 rounded-3xl object-cover" />
                                             <div class="grid gap-2">
                                                 <div>
                                                     <p class="text-sm font-semibold text-slate-900">{{ item.name }}</p>
@@ -133,7 +149,7 @@ const handleLogout = () => {
                                                     <div class="flex items-center rounded-full border border-slate-200 bg-slate-50 px-2 py-1">
                                                         <button
                                                             type="button"
-                                                            @click="updateQuantity(item.id, item.quantity - 1)"
+                                                            @click="updateQuantity(item.id, item.quantity - 1, item.size, item.color)"
                                                             class="rounded-full bg-white p-1 text-slate-600 hover:bg-slate-100"
                                                         >
                                                             <MinusIcon class="h-4 w-4" />
@@ -141,13 +157,13 @@ const handleLogout = () => {
                                                         <span class="mx-2 text-sm font-semibold text-slate-900">{{ item.quantity }}</span>
                                                         <button
                                                             type="button"
-                                                            @click="updateQuantity(item.id, item.quantity + 1)"
+                                                            @click="updateQuantity(item.id, item.quantity + 1, item.size, item.color)"
                                                             class="rounded-full bg-white p-1 text-slate-600 hover:bg-slate-100"
                                                         >
                                                             <PlusIcon class="h-4 w-4" />
                                                         </button>
                                                     </div>
-                                                    <button type="button" @click="removeFromCart(item.id)" class="text-sm font-medium text-slate-600 hover:text-red-500">Remove</button>
+                                                    <button type="button" @click="removeFromCart(item.id, item.size, item.color)" class="text-sm font-medium text-slate-600 hover:text-red-500">Remove</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -166,8 +182,8 @@ const handleLogout = () => {
                                         <span>{{ formatCurrency(cartTotal) }}</span>
                                     </div>
                                     <div class="mt-4 grid gap-3">
-                                        <button type="button" class="w-full rounded-3xl bg-black px-4 py-3 text-sm font-semibold text-white hover:bg-slate-900">CHECK OUT</button>
-                                        <button type="button" class="w-full rounded-3xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-50">VIEW CART</button>
+                                        <button type="button" class="w-full rounded-3xl bg-black px-4 py-3 text-sm font-semibold text-white hover:bg-slate-900" @click="isCartOpen = false; handleCheckoutClick">CHECK OUT</button>
+                                        <button type="button" class="w-full rounded-3xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-50" @click="isCartOpen = false; router.visit('/cart')">VIEW CART</button>
                                     </div>
                                 </div>
                             </div>
@@ -216,6 +232,7 @@ const handleLogout = () => {
         <div v-if="isMobileMenuOpen" class="md:hidden bg-white border-t p-4 space-y-4 shadow-lg">
             <Link href="/" class="block text-gray-600">Home</Link>
             <Link href="/products" class="block text-gray-600">Products</Link>
+            <Link :href="route('new-drops.index')" class="block text-red-500 font-bold italic">New Drops</Link>
             <Link href="/deals" class="block text-red-500 font-bold font-italic">Deals</Link>
         </div>
     </nav>

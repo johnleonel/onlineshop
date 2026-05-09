@@ -1,88 +1,41 @@
 <script setup>
-import { ref } from 'vue';
-import { Link, router } from '@inertiajs/vue3'; // Gamitin ang Inertia router, hindi vue-router
-import useCart from '@/composables/useCart';
+import { ref, computed } from 'vue'
+import { Link, router } from '@inertiajs/vue3'
+import useCart from '@/composables/useCart'
+import { resolveImage } from '@/utils/imageHelper'
 
-const { addToCart } = useCart();
+const { addToCart } = useCart()
 
 const props = defineProps({
   collections: {
-    type: Array,
-    default: () => [
-      {
-        name: 'ALL DESIGN',
-        items: [
-          { id: 1, name: 'Classic brown polo', price: 875.00, image: '/images/hood14.jpg', category: 'Polo' },
-          { id: 2, name: 'Xiaomi 14T', price: 1000.00, image: '/images/hood2.jpg', category: 'Polo' },
-          { id: 3, name: 'Bomber polo', price: 1000.00, image: '/images/hood3.jpg', category: 'Polo' },
-          { id: 4, name: 'Classic Cotton Tshirt', price: 850.00, image: '/images/hood4.jpg', category: 'Tshirt' },
-          { id: 5, name: 'Redbull Shirt', price: 850.00, image: '/images/shot1.jpg', category: 'Shirts' },
-          { id: 6, name: 'Ferrari Shirt', price: 800.00, image: '/images/hood17.jpg', category: 'Shirts', discount: 5 },
-          { id: 7, name: 'Ducati Polo Shirt', price: 750.00, image: '/images/more5.jpg', category: 'Polo' },
-          { id: 8, name: 'B&W Polo Shirt', price: 700.00, image: '/images/hood21.jpg', category: 'Polo' },
-        ]
-      },
-      {
-        name: 'STREET STYLE',
-        items: [
-          { id: 13, name: 'SUMMER HOODIE', price: 2100.00, image: '/images/hood2.jpg', category: 'Hoodie' },
-          { id: 14, name: 'TROPICAL TEE', price: 900.00, image: '/images/hood20.jpg', category: 'Tee' },
-        ]
-      },
-      {
-        name: 'BASIC',
-        items: [
-          { id: 15, name: 'FIRE TEE', price: 950.00, image: '/images/hood17.jpg', category: 'Tee' },
-        ]
-      },
-      {
-        name: 'CASHUAL',
-        items: [
-          { id: 16, name: 'ATHLETIC WEAR', price: 1200.00, image: '/images/hood14.jpg', category: 'Athletic' },
-        ]
-      },
-      {
-        name: 'STUNNA',
-        items: [
-          { id: 17, name: 'PEACE TEE', price: 850.00, image: '/images/hood3.jpg', category: 'Tee' },
-          { id: 18, name: 'PEACE TEE', price: 850.00, image: '/images/hood14.jpg', category: 'Tee' },
-        ]
-      },
-      {
-        name: 'DRIP',
-        items: [
-          { id: 19, name: 'WORTH IT TEE', price: 950.00, image: '/images/hood2.jpg', category: 'Tee' },
-          { id: 20, name: 'WORTH IT TEE', price: 950.00, image: '/images/hood4.jpg', category: 'Tee' },
-        ]
-      },
-    ]
+    type: Object,
+    default: () => ({})
   }
-});
+})
 
-const activeCollectionIndex = ref(0);
-const activeCollection = ref(props.collections[0]);
+const collectionNames = computed(() => Object.keys(props.collections))
+const activeCollectionIndex = ref(0)
+const activeCollectionName = computed(() => collectionNames.value[activeCollectionIndex.value] || '')
+const activeCollectionItems = computed(() => props.collections[activeCollectionName.value] || [])
 
 const selectCollection = (index) => {
-  activeCollectionIndex.value = index;
-  activeCollection.value = props.collections[index];
-};
+  activeCollectionIndex.value = index
+}
 
-const formatPrice = (price) => {
-  return price.toFixed(2);
-};
+const formatPrice = (price) => price.toFixed(2)
 
-// Inertia navigation
 const goToProducts = () => {
-  router.visit('/products');
-};
+  router.visit('/products')
+}
 
 const goToProduct = (productId) => {
-  router.visit(`/products/${productId}`);
-};
+  router.visit('/products/' + productId)
+}
 
 const handleAddToCart = (product) => {
-  addToCart(product);
-};
+  addToCart(product)
+}
+
 </script>
 
 <template>
@@ -92,9 +45,9 @@ const handleAddToCart = (product) => {
         COLLECTIONS
       </h2>
 
-      <div class="flex flex-wrap gap-3 md:gap-6 justify-center mb-12 border-b border-gray-200 pb-6">
+      <div v-if="collectionNames.length > 0" class="flex flex-wrap gap-3 md:gap-6 justify-center mb-12 border-b border-gray-200 pb-6">
         <button
-          v-for="(collection, index) in collections"
+          v-for="(name, index) in collectionNames"
           :key="index"
           @click="selectCollection(index)"
           :class="[
@@ -104,22 +57,26 @@ const handleAddToCart = (product) => {
               : 'text-gray-400 hover:text-gray-600'
           ]"
         >
-          {{ collection.name }}
+          {{ name }}
         </button>
       </div>
     </div>
 
     <div class="max-w-7xl mx-auto">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div v-if="activeCollectionItems.length === 0" class="text-center text-slate-400 py-12">
+        No items in this collection.
+      </div>
+
+      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <div
-          v-for="item in activeCollection.items"
+          v-for="item in activeCollectionItems"
           :key="item.id"
           class="group cursor-pointer"
           @click="goToProduct(item.id)"
         >
           <div class="relative overflow-hidden rounded-lg bg-gray-100 mb-4 aspect-square">
             <img
-              :src="item.image"
+              :src="resolveImage(item.image)"
               :alt="item.name"
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
@@ -142,9 +99,8 @@ const handleAddToCart = (product) => {
         </div>
       </div>
 
-      <!-- Button with Shimmer Hover Animation -->
       <div class="mt-16 flex justify-center">
-        <button 
+        <button
           @click="goToProducts"
           class="group relative overflow-hidden px-10 py-4 bg-black text-white font-bold tracking-widest transition-all duration-300 ease-in-out hover:bg-gray-900 hover:shadow-2xl hover:-translate-y-1 active:scale-95 rounded-sm uppercase text-sm"
         >
@@ -163,8 +119,7 @@ const handleAddToCart = (product) => {
   }
 }
 
-/* Custom animation trigger for Tailwind group-hover */
-.group:hover .group-hover\:animate-\[shimmer_1\.5s_infinite\] {
+.group:hover .group-hover:animate-[shimmer_1.5s_infinite] {
   animation: shimmer 1.5s infinite;
 }
 </style>

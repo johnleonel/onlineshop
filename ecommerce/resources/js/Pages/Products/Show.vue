@@ -19,7 +19,7 @@
         <section>
           <div class="rounded-[2rem] bg-white p-4 shadow-sm border border-slate-100">
             <img
-              :src="product.image"
+              :src="resolveImage(product.image)"
               :alt="product.name"
               class="w-full rounded-[1.5rem] object-cover aspect-square"
             />
@@ -92,7 +92,7 @@
               <button @click="handleAddToCart" class="bg-emerald-600 text-white py-3 rounded-xl font-bold text-sm hover:bg-emerald-700 transition">
                 + Add to Cart
               </button>
-              <button class="bg-slate-900 text-white py-3 rounded-xl font-bold text-sm hover:bg-slate-800 transition">
+              <button @click="handleBuyNow" class="bg-slate-900 text-white py-3 rounded-xl font-bold text-sm hover:bg-slate-800 transition">
                 Buy Now
               </button>
             </div>
@@ -151,14 +151,36 @@
          <p class="text-slate-600">Detailed product specifications and material info here...</p>
       </div>
     </div>
+
+    <!-- Toast notification -->
+    <Transition
+      enter-active-class="transition duration-300 ease-out"
+      enter-from-class="transform -translate-y-4 opacity-0"
+      enter-to-class="transform translate-y-0 opacity-100"
+      leave-active-class="transition duration-200 ease-in"
+      leave-from-class="transform translate-y-0 opacity-100"
+      leave-to-class="transform -translate-y-4 opacity-0"
+    >
+      <div
+        v-if="toastVisible"
+        class="fixed top-24 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-black text-white px-5 py-3 rounded-2xl shadow-xl"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+        </svg>
+        <span class="text-sm font-semibold">"{{ addedToastName }}" added to cart</span>
+      </div>
+    </Transition>
   </AppLayout>
 </template>
 
 <script setup>
 import AppLayout from '@/Layouts/Applayout.vue'
-import { Head, Link } from '@inertiajs/vue3'
+import { Head, Link, router, usePage } from '@inertiajs/vue3'
 import { ref, computed } from 'vue'
 import useCart from '@/composables/useCart'
+import useAuthModal from '@/composables/useAuthModal'
+import { resolveImage } from '@/utils/imageHelper'
 
 const props = defineProps({
   product: {
@@ -168,8 +190,13 @@ const props = defineProps({
 })
 
 // Logic para sa Cart
-const { addToCart } = useCart()
+const { addToCart, setBuyNowItem } = useCart()
+const { openAuthModal } = useAuthModal()
+const page = usePage()
 const quantity = ref(1)
+
+// Check if user is authenticated
+const isAuthenticated = computed(() => !!page.props.auth?.user)
 
 // UI State
 const selectedColor = ref('53 Green')
@@ -187,10 +214,10 @@ const tabs = ['Details', 'Reviews', 'Discussion']
 
 // Computed Properties
 const thumbnailImages = computed(() => [
-  props.product.image,
-  props.product.image,
-  props.product.image,
-  props.product.image,
+  resolveImage(props.product.image),
+  resolveImage(props.product.image),
+  resolveImage(props.product.image),
+  resolveImage(props.product.image),
 ])
 const moreThumbnails = 4
 
@@ -208,6 +235,32 @@ const ratingBars = [
 const formatPrice = (price) => parseFloat(price).toFixed(2)
 
 const handleAddToCart = () => {
-  addToCart(props.product, quantity.value)
+  addToCart(props.product, quantity.value, selectedSize.value, selectedColor.value)
+  showAddedToast(props.product.name)
 }
+
+const handleBuyNow = () => {
+  if (!selectedSize.value) {
+    alert('Please select a size before proceeding.')
+    return
+  }
+  // If guest, show login modal instead of redirecting
+  if (!isAuthenticated.value) {
+    openAuthModal('/checkout?source=direct_buy')
+    return
+  }
+  setBuyNowItem(props.product, quantity.value, selectedSize.value, selectedColor.value)
+  router.visit('/checkout?source=direct_buy')
+}
+
+const showAddedToast = (productName) => {
+  addedToastName.value = productName
+  toastVisible.value = true
+  setTimeout(() => {
+    toastVisible.value = false
+  }, 2500)
+}
+
+const toastVisible = ref(false)
+const addedToastName = ref('')
 </script>

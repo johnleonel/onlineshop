@@ -155,7 +155,7 @@
                   <h4 class="text-[10px] font-black uppercase text-gray-900 leading-tight">All Products 50% Off</h4>
                 </div>
                 
-                <button class="w-full bg-black text-white py-2 rounded-xl font-bold text-[10px] uppercase flex items-center justify-center gap-2 transition-all hover:bg-zinc-800 active:scale-[0.98] group">
+                <button class="w-full bg-black text-white py-3 rounded-xl font-bold text-[10px] uppercase flex items-center justify-center gap-2 transition-all hover:bg-zinc-800 active:scale-[0.98] group">
                   Shop Now
                   <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-hover:translate-x-1">
                     <path d="M9 18l6-6-6-6"/>
@@ -181,11 +181,13 @@ const props = defineProps({
 });
 
 const newDropImages = [
-    '/images/hood1.jpg', 
-    '/images/hood2.jpg', 
-    '/images/hood3.jpg', 
-    '/images/hood4.jpg', 
-    '/images/hood2.jpg'
+    '/images/sale1.jpg', 
+    '/images/sale2.jpg', 
+    '/images/sale3.jpg', 
+    '/images/sale4.jpg', 
+    '/images/sale5.jpg',
+    '/images/hood17.jpg',
+    '/images/hood14.jpg'
   ];
 
 const currentSlide = ref(0);

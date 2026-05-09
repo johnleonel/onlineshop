@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { Link, router, Head } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/Applayout.vue';
 import useCart from '@/composables/useCart';
+import { resolveImage } from '@/utils/imageHelper';
 
 const props = defineProps({
     product: Object,
@@ -55,7 +56,7 @@ const decrementQuantity = () => {
                 <section class="space-y-6">
                     <div class="rounded-2xl bg-white p-8 shadow-sm border border-gray-200">
                         <img
-                            :src="product.image"
+                            :src="resolveImage(product.image)"
                             :alt="product.name"
                             class="w-full rounded-2xl object-cover bg-gray-100"
                         />

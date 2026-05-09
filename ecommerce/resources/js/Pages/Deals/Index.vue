@@ -3,12 +3,13 @@ import { ref, computed } from 'vue';
 import { Link, router, Head } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/Applayout.vue';
 import useCart from '@/composables/useCart';
+import { resolveImage } from '@/utils/imageHelper';
 
 defineProps({
     products: Array,
 });
 
-const { addToCart } = useCart();
+const { addToCart, setBuyNowItem } = useCart();
 
 const formatPrice = (price) => {
     return Number(price).toLocaleString('id-ID');
@@ -19,8 +20,15 @@ const handleBuy = (product) => {
     router.visit('/cart');
 };
 
-const handleAddToCart = (product) => {
+const handleAddToCart = (e, product) => {
+    e.stopPropagation();
     addToCart(product);
+};
+
+const handleBuyNow = (e, product) => {
+    e.stopPropagation();
+    setBuyNowItem(product, 1, null, null);
+    router.visit('/checkout');
 };
 
 const goToProduct = (productId) => {
@@ -70,7 +78,7 @@ const goToProduct = (productId) => {
                         <!-- Image Container -->
                         <div class="aspect-square w-full overflow-hidden bg-transparent p-4">
                             <img
-                                :src="product.image"
+                                :src="resolveImage(product.image)"
                                 :alt="product.name"
                                 class="h-full w-full object-contain transition duration-500 group-hover:scale-110"
                             />
@@ -97,6 +105,22 @@ const goToProduct = (productId) => {
 
                             <!-- Rating -->
                             <p class="text-xs text-yellow-500 font-bold mb-4">{{ product.rating }} ★</p>
+
+                            <!-- Action Buttons -->
+                            <div class="flex gap-2 justify-center mt-auto">
+                                <button
+                                    @click.stop="handleAddToCart($event, product)"
+                                    class="px-3 py-2 text-xs font-semibold bg-black text-white rounded-lg hover:bg-slate-700 transition"
+                                >
+                                    Add to Cart
+                                </button>
+                                <button
+                                    @click.stop="handleBuyNow($event, product)"
+                                    class="px-3 py-2 text-xs font-semibold bg-slate-900 text-white rounded-lg hover:bg-slate-700 transition"
+                                >
+                                    Buy Now
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

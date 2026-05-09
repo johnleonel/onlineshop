@@ -2,357 +2,183 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ProductController extends Controller
 {
-    private function products()
+    /**
+     * Map a Product model to an array with a resolved local image path.
+     * image field stores just the filename (e.g. "hood2.jpg");
+     * we prefix it with /images/ to point to /public/images/ on the server.
+     */
+    private function mapProduct(Product $p): array
     {
-        return [
-            [
-                'id' => 1,
-                'name' => 'Classic brown polo',
-                'price' => 100.00,
-                'category' => 'Polo',
-                'status' => 'active',
-                'statusLabel' => 'outofstock',
-                'rating' => '4.6',
-                'description' => 'Sharp 27-inch gaming monitor with high refresh rate.',
-                'image' => '/images/hood14.jpg'
-            ],
-            [
-                'id' => 2,
-                'name' => 'Xiaomi 14T',
-                'price' => 450.00,
-                'category' => 'Polo',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.6',
-                'description' => 'Premium smartphone with a powerful camera system.',
-                'image' => '/images/hood2.jpg'
-            ],
-            [
-                'id' => 3,
-                'name' => 'Bomber polo',
-                'price' => 120.00,
-                'category' => 'Polo',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.6',
-                'description' => 'Stylish jacket with a comfortable fit and premium finish.',
-                'image' => '/images/hood3.jpg'
-            ],
-            [
-                'id' => 4,
-                'name' => 'Classic Cotton Tshirt',
-                'price' => 35.00,
-                'category' => 'Tshirt',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.6',
-                'description' => 'Soft cotton tshirt available in multiple colors.',
-                'image' => '/images/hood4.jpg'
-            ],
-            [
-                'id' => 5,
-                'name' => 'Redbull Shirt',
-                'price' => 45.00,
-                'category' => 'Shirts',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.6',
-                'description' => 'Lightweight shorts built for comfort and movement.',
-                'image' => '/images/shot1.jpg'
-            ],
-            [
-                'id' => 6,
-                'name' => 'Ferrari Shirt',
-                'price' => 28.00,
-                'category' => 'Shirts',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.6',
-                'description' => 'Breathable sando for warm weather wear.',
-                'image' => '/images/hood17.jpg'
-            ],
-            [
-                'id' => 7,
-                'name' => 'Ducati Polo Shirt',
-                'price' => 274.00,
-                'category' => 'Polo',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.6',
-                'description' => 'Stylish phone with a vivid display and long battery life.',
-                'image' => '/images/more5.jpg'
-            ],
-            [
-                'id' => 8,
-                'name' => 'B&W Polo Shirt',
-                'price' => 750.00,
-                'category' => 'Polo',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.6',
-                'description' => 'Reliable 24-inch display for office and entertainment.',
-                'image' => '/images/hood21.jpg'
-            ],
-            [
-                'id' => 9,
-                'name' => 'Urban Polo',
-                'price' => 1500.00,
-                'category' => 'Polo',
-                'status' => 'active',
-                'statusLabel' => 'New Arrival',
-                'rating' => '4.8',
-                'description' => 'Water-resistant windbreaker perfect for the rainy season.',
-                'image' => '/images/more1.jpg'
-            ],
-            [
-                'id' => 10,
-                'name' => 'Urban Cargo Pants',
-                'price' => 1200.00,
-                'category' => 'Pants',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.7',
-                'description' => 'Multi-pocket cargo pants for your daily street style.',
-                'image' => '/images/more2.jpg'
-            ],
-            [
-                'id' => 11,
-                'name' => 'Chillerox Beanie',
-                'price' => 350.00,
-                'category' => 'Accessories',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.9',
-                'description' => 'Knitted beanie with embroidered logo.',
-                'image' => '/images/more3.jpg'
-            ],
-            [
-                'id' => 12,
-                'name' => 'Denim Trucker Jacket',
-                'price' => 1800.00,
-                'category' => 'Jackets',
-                'status' => 'active',
-                'statusLabel' => 'Limited',
-                'rating' => '4.6',
-                'description' => 'Classic washed denim jacket with a modern fit.',
-                'image' => '/images/more4.jpg'
-            ],
-            [
-                'id' => 13,
-                'name' => 'Canvas Tote Bag',
-                'price' => 450.00,
-                'category' => 'Accessories',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.5',
-                'description' => 'Heavy-duty canvas bag for your essentials.',
-                'image' => '/images/more1.jpg'
-            ],
-            [
-                'id' => 14,
-                'name' => 'Slim Fit Joggers',
-                'price' => 950.00,
-                'category' => 'Pants',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.7',
-                'description' => 'Breathable fabric joggers for gym or casual wear.',
-                'image' => '/images/more2.jpg'
-            ],
-            [
-                'id' => 15,
-                'name' => 'Premium Leather Belt',
-                'price' => 600.00,
-                'category' => 'Accessories',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.8',
-                'description' => 'Genuine leather belt with matte black buckle.',
-                'image' => '/images/more3.jpg'
-            ],
-            [
-                'id' => 16,
-                'name' => 'Oversized Flannel Shirt',
-                'price' => 850.00,
-                'category' => 'Jackets',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.6',
-                'description' => 'Soft flannel shirt, perfect as an outer layer.',
-                'image' => '/images/more4.jpg'
-            ],
-            [
-                'id' => 17,
-                'name' => 'Oversized Flannel Shirt',
-                'price' => 850.00,
-                'category' => 'Jackets',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.6',
-                'description' => 'Soft flannel shirt, perfect as an outer layer.',
-                'image' => '/images/sale1.jpg'
-            ],
-            [
-                'id' => 18,
-                'name' => 'Oversized Flannel Shirt',
-                'price' => 850.00,
-                'category' => 'Jackets',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.6',
-                'description' => 'Soft flannel shirt, perfect as an outer layer.',
-                'image' => '/images/sale2.jpg'
-            ],
-            [
-                'id' => 19,
-                'name' => 'Oversized Flannel Shirt',
-                'price' => 850.00,
-                'category' => 'Jackets',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.6',
-                'description' => 'Soft flannel shirt, perfect as an outer layer.',
-                'image' => '/images/sale3.jpg'
-            ],
-            [
-                'id' => 20,
-                'name' => 'Oversized Flannel Shirt',
-                'price' => 850.00,
-                'category' => 'Jackets',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.6',
-                'description' => 'Soft flannel shirt, perfect as an outer layer.',
-                'image' => '/images/sale4.jpg'
-            ],
-            [
-                'id' => 21,
-                'name' => 'Oversized Flannel Shirt',
-                'price' => 850.00,
-                'category' => 'Jackets',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.6',
-                'description' => 'Soft flannel shirt, perfect as an outer layer.',
-                'image' => '/images/sale5.jpg'
-            ],
-            [
-                'id' => 22,
-                'name' => 'Oversized Flannel Shirt',
-                'price' => 850.00,
-                'category' => 'Jackets',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.6',
-                'description' => 'Soft flannel shirt, perfect as an outer layer.',
-                'image' => '/images/sale6.jpg'
-            ],
-            [
-                'id' => 23,
-                'name' => 'Oversized Flannel Shirt',
-                'price' => 850.00,
-                'category' => 'Jackets',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.6',
-                'description' => 'Soft flannel shirt, perfect as an outer layer.',
-                'image' => '/images/sale7.jpg'
-            ],
-            [
-                'id' => 24,
-                'name' => 'Oversized Flannel Shirt',
-                'price' => 850.00,
-                'category' => 'Jackets',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.6',
-                'description' => 'Soft flannel shirt, perfect as an outer layer.',
-                'image' => '/images/more4.jpg'
-            ],
-            [
-                'id' => 25,
-                'name' => 'Oversized Flannel Shirt',
-                'price' => 850.00,
-                'category' => 'Jackets',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.6',
-                'description' => 'Soft flannel shirt, perfect as an outer layer.',
-                'image' => '/images/more4.jpg'
-            ],
-            [
-                'id' => 26,
-                'name' => 'Oversized Flannel Shirt',
-                'price' => 850.00,
-                'category' => 'Jackets',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.6',
-                'description' => 'Soft flannel shirt, perfect as an outer layer.',
-                'image' => '/images/more4.jpg'
-            ],
-            [
-                'id' => 27,
-                'name' => 'Oversized Flannel Shirt',
-                'price' => 850.00,
-                'category' => 'Jackets',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.6',
-                'description' => 'Soft flannel shirt, perfect as an outer layer.',
-                'image' => '/images/more4.jpg'
-            ],
-            [
-                'id' => 28,
-                'name' => 'Oversized Flannel Shirt',
-                'price' => 850.00,
-                'category' => 'Jackets',
-                'status' => 'active',
-                'statusLabel' => 'Active',
-                'rating' => '4.6',
-                'description' => 'Soft flannel shirt, perfect as an outer layer.',
-                'image' => '/images/more4.jpg'
-            ],
-            ];
+        $image = $p->image ?? '';
+        // Prefix with /images/ only for bare filenames (not absolute/data URLs)
+        if ($image && !str_starts_with($image, '/') && !str_starts_with($image, 'http') && !str_starts_with($image, 'data:')) {
+            $image = '/images/' . $image;
         }
 
-        
+        return [
+            'id'       => $p->id,
+            'name'     => $p->name,
+            'price'    => (float) $p->price,
+            'image'    => $image,
+            'category' => $p->category,
+            'discount' => $p->hasDiscount() ? $p->getDiscountPercentAttribute() : null,
+        ];
+    }
 
+    /**
+     * Get home page data: sale items and collection items.
+     */
+    public function home()
+    {
+        // Sale items: featured or discounted products
+        $saleItems = Product::active()
+            ->where(function ($q) {
+                $q->where('is_featured', true)
+                  ->orWhereNotNull('original_price');
+            })
+            ->orderBy('created_at', 'desc')
+            ->limit(12)
+            ->get()
+            ->map(fn ($p) => $this->mapProduct($p));
+
+        // Collections keyed by category name
+        $collectionsRaw = Product::active()
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->groupBy(fn ($p) => ucfirst($p->category));
+
+        $collections = [];
+        foreach ($collectionsRaw as $category => $items) {
+            $collections[$category] = $items->map(fn ($p) => $this->mapProduct($p))->values()->toArray();
+        }
+
+        return Inertia::render('Dashboard', [
+            'homeProducts'    => $saleItems,
+            'homeCollections' => $collections,
+        ]);
+    }
+
+    /**
+     * Display a listing of products.
+     */
     public function index(Request $request)
     {
         $categoryQuery = strtolower($request->query('category', 'all'));
+        $searchQuery = strtolower($request->query('search', ''));
 
-        $filteredProducts = collect($this->products())->filter(function ($product) use ($categoryQuery) {
-            if ($categoryQuery === 'all' || $categoryQuery === '') {
-                return true;
-            }
+        $productsQuery = Product::active();
 
-            return strtolower($product['category']) === strtolower($categoryQuery);
-        })->values()->all();
+        if ($categoryQuery !== 'all' && $categoryQuery !== '') {
+            $productsQuery->category($categoryQuery);
+        }
+
+        if (!empty($searchQuery)) {
+            $productsQuery->where(function ($q) use ($searchQuery) {
+                $q->whereRaw('LOWER(name) LIKE ?', ["%{$searchQuery}%"])
+                  ->orWhereRaw('LOWER(category) LIKE ?', ["%{$searchQuery}%"]);
+            });
+        }
+
+        $products = $productsQuery->orderBy('created_at', 'desc')->get();
 
         return Inertia::render('Products/Index', [
-            'products' => $filteredProducts,
+            'products' => $products,
             'selectedCategory' => $categoryQuery,
         ]);
     }
 
-    public function show($product)
+    /**
+     * Display the specified product.
+     */
+    public function show($id)
     {
-        $productDetails = collect($this->products())->firstWhere('id', (int) $product);
-
-        if (! $productDetails) {
-            abort(404);
+        // Try to find by integer ID first, then by slug
+        $product = null;
+        if (is_numeric($id)) {
+            $product = Product::find((int) $id);
+        }
+        if (!$product) {
+            $product = Product::where('slug', $id)->active()->first();
         }
 
+        if (!$product) {
+            // If coming from an Inertia link, redirect back with a flash message
+            if (request()->header('X-Inertia')) {
+                return redirect()->back()->with('error', 'Product not found.');
+            }
+            abort(404, 'Product not found.');
+        }
+
+        // Get related products (same category, exclude current)
+        $relatedProducts = Product::where('category', $product->category)
+            ->where('id', '!=', $product->id)
+            ->active()
+            ->limit(4)
+            ->get();
+
         return Inertia::render('Products/Show', [
-            'product' => $productDetails,
+            'product' => $this->mapProduct($product),
+            'relatedProducts' => $relatedProducts->map(fn ($p) => $this->mapProduct($p))->values()->all(),
         ]);
     }
 
+    /**
+     * Get products by category (API endpoint for AJAX).
+     */
+    public function byCategory(Request $request, string $category)
+    {
+        $products = Product::category($category)
+            ->active()
+            ->orderBy('created_at', 'desc')
+            ->get();
 
+        return response()->json([
+            'success' => true,
+            'products' => $products,
+            'category' => $category,
+        ]);
+    }
+
+    /**
+     * Get new drop products.
+     */
+    public function newDrops()
+    {
+        $newDrops = Product::newDrops()
+            ->active()
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return Inertia::render('Products/NewDrops', [
+            'products' => $newDrops,
+        ]);
+    }
+
+    /**
+     * Search products (API endpoint).
+     */
+    public function search(Request $request)
+    {
+        $query = strtolower($request->query('q', ''));
+
+        $products = Product::where(function ($q) use ($query) {
+            $q->whereRaw('LOWER(name) LIKE ?', ["%{$query}%"])
+              ->orWhereRaw('LOWER(category) LIKE ?', ["%{$query}%"])
+              ->orWhereRaw('LOWER(description) LIKE ?', ["%{$query}%"]);
+        })
+        ->active()
+        ->limit(10)
+        ->get();
+
+        return response()->json([
+            'success' => true,
+            'products' => $products,
+        ]);
+    }
 }

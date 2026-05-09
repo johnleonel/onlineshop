@@ -96,9 +96,9 @@
             @click="goToProduct(product.id)"
           >
             <!-- Image Container -->
-            <div class="aspect-square w-full overflow-hidden bg-white p-3"> 
+            <div class="aspect-square w-full overflow-hidden bg-white p-3">
               <img
-                :src="product.image"
+                :src="resolveImage(product.image)"
                 :alt="product.name"
                 class="h-full w-full object-contain transition duration-500 hover:scale-105"
               />
@@ -114,10 +114,30 @@
               <h2 class="mt-2 text-sm font-bold text-slate-900 line-clamp-1">{{ product.name }}</h2>
               <p class="mt-1 text-[11px] leading-4 text-slate-500 line-clamp-2">{{ product.description }}</p>
               
-              <!-- Price & Rating -->
-              <div class="mt-auto pt-3">
-                <p class="text-sm font-black text-slate-900">₱{{ formatPrice(product.price) }}</p>
-                <p class="text-[10px] text-yellow-500 font-bold">{{ product.rating }} ★</p>
+              <!-- Price & Rating & Add to Cart -->
+              <div class="mt-auto pt-3 flex items-center justify-between gap-2">
+                <div>
+                  <p class="text-sm font-black text-slate-900">₱{{ formatPrice(product.price) }}</p>
+                  <p class="text-[10px] text-yellow-500 font-bold">{{ product.rating }} ★</p>
+                </div>
+                <button
+                  @click="handleAddToCart($event, product)"
+                  class="flex-shrink-0 rounded-full bg-black p-2 text-white shadow-md transition hover:bg-slate-800 hover:scale-105 active:scale-95"
+                  title="Add to Cart"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                  </svg>
+                </button>
+                <button
+                  @click="handleBuyNow($event, product)"
+                  class="flex-shrink-0 rounded-full bg-slate-900 p-2 text-white shadow-md transition hover:bg-slate-700 hover:scale-105 active:scale-95"
+                  title="Buy Now"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 3.75a.75.75 0 01.75.75v3.5h3.5a.75.75 0 010 1.5h-3.5v3.5a.75.75 0 01-1.5 0v-3.5h-3.5a.75.75 0 010-1.5h3.5v-3.5A.75.75 0 0110 3.75z" clip-rule="evenodd" />
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
@@ -128,6 +148,26 @@
         </div>
       </div>
     </div>
+
+    <!-- Toast notification -->
+    <Transition
+      enter-active-class="transition duration-300 ease-out"
+      enter-from-class="transform -translate-y-4 opacity-0"
+      enter-to-class="transform translate-y-0 opacity-100"
+      leave-active-class="transition duration-200 ease-in"
+      leave-from-class="transform translate-y-0 opacity-100"
+      leave-to-class="transform -translate-y-4 opacity-0"
+    >
+      <div
+        v-if="toastVisible"
+        class="fixed top-24 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-black text-white px-5 py-3 rounded-2xl shadow-xl"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+        </svg>
+        <span class="text-sm font-semibold">"{{ addedToastName }}" added to cart</span>
+      </div>
+    </Transition>
   </AppLayout>
 </template>
 
@@ -136,6 +176,7 @@ import AppLayout from '@/Layouts/Applayout.vue'
 import { Head, router } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
 import useCart from '@/composables/useCart'
+import { resolveImage } from '@/utils/imageHelper'
 
 const props = defineProps({
   products: {
@@ -178,11 +219,30 @@ const selectCategory = (categoryId) => {
 }
 // ------------------------------------------
 
-const { addToCart } = useCart()
+const { addToCart, setBuyNowItem } = useCart()
 
-const handleAddToCart = (product) => {
-  addToCart(product);
-};
+const handleAddToCart = (e, product) => {
+  e.stopPropagation()
+  addToCart(product)
+  showAddedToast(product.name)
+}
+
+const handleBuyNow = (e, product) => {
+  e.stopPropagation()
+  setBuyNowItem(product, 1, null, null)
+  router.visit('/checkout')
+}
+
+// Toast notification
+const showAddedToast = (productName) => {
+  addedToastName.value = productName
+  toastVisible.value = true
+  setTimeout(() => {
+    toastVisible.value = false
+  }, 2500)
+}
+const toastVisible = ref(false)
+const addedToastName = ref('')
 
 const goToProduct = (productId) => {
   router.get(`/products/${productId}`);
